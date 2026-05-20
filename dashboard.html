@@ -1,47 +1,638 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
-<link rel="stylesheet" href="assets/style.css">
-</head>
-<body>
+<!DOCTYPE html>    
+<html lang="pt-BR">    
+<head>    
+<meta charset="UTF-8">    
+<meta name="viewport" content="width=device-width, initial-scale=1.0">    
+<title>Sala sem Futuro OS - Dashboard</title>    
+<style>    
+    
+:root{    
+    --bg:#07070a;    
+    --card:#0f0f16;    
+    --border:rgba(255,255,255,.08);    
+    
+    --green:#00ff88;    
+    --yellow:#ffd000;    
+    
+    --gradient-normal:    
+    linear-gradient(    
+        135deg,    
+        #8b5cf6,    
+        #d946ef    
+    );    
+    
+    --gradient-gold:    
+    linear-gradient(    
+        135deg,    
+        #ff2d55,    
+        #ff6b00,    
+        #ffd700    
+    );    
+}    
+    
+*{    
+    margin:0;    
+    padding:0;    
+    box-sizing:border-box;    
+    font-family:'Segoe UI',sans-serif;    
+}    
+    
+body{    
+    background:#050507;    
+    color:white;    
+    overflow-x:hidden;    
+    min-height:100vh;    
+    position:relative;    
+    padding-bottom:120px;    
+}    
+    
+body::before{    
+    content:'';    
+    position:fixed;    
+    inset:0;    
+    background: url('https://i.postimg.cc/gky5YNH2/1778823817951-3.jpg') center/cover no-repeat;    
+    opacity:.10;    
+    z-index:-2;    
+    transition: background 0.3s;
+}    
+    
+body.beta-mode::before{    
+    background: url('https://i.postimg.cc/gjG6L4Yq/IMG-20260519-0001.jpg') center/cover no-repeat;    
+    opacity:.12;    
+}    
+    
+body::after{    
+    content:'';    
+    position:fixed;    
+    inset:0;    
+    background: linear-gradient(to bottom, rgba(0,0,0,.7), rgba(0,0,0,.9));    
+    z-index:-1;    
+}    
+    
+.page{    
+    padding:22px;    
+    max-width:480px;
+    margin: 0 auto;
+}    
+    
+.logo{    
+    display:flex;    
+    align-items:center;    
+    gap:12px;    
+    margin-bottom:28px;    
+}    
+    
+.glass{    
+    background:#0f0f14;    
+    border: 1px solid var(--border);    
+    box-shadow: 0 8px 24px rgba(0,0,0,.5);    
+    transition: border-color 0.3s, box-shadow 0.3s;
+}    
+    
+.status-panel{    
+    padding:20px;    
+    border-radius:24px;    
+    display:flex;    
+    justify-content:space-between;    
+    align-items:center;    
+    margin-bottom:25px;    
+    background:rgba(255,255,255,.02);    
+    border:1px solid var(--border);    
+}    
+    
+.status-indicator h2{    
+    font-size:1.2rem;    
+    font-weight:800;    
+    display:flex;    
+    align-items:center;    
+}    
+    
+.status-dot{    
+    width:10px;    
+    height:10px;    
+    border-radius:50%;    
+    display:inline-block;    
+    margin-right:10px;    
+}    
+    
+.status-dot.free{    
+    background:#00ff88;    
+    box-shadow: 0 0 8px rgba(0,255,136,.6);    
+}    
+    
+#statusPlano.free-status{    
+    color:#ffd000;    
+}    
+    
+#statusPlano.beta-status{    
+    background: var(--gradient-gold);    
+    -webkit-background-clip:text;    
+    -webkit-text-fill-color:transparent;    
+}    
+    
+.status-dot.beta{    
+    background: var(--gradient-gold);    
+    box-shadow: 0 0 10px rgba(255,120,0,.7), 0 0 20px rgba(255,215,0,.4);    
+}    
+    
+.switch-container{    
+    display:flex;    
+    align-items:center;    
+    gap:12px;    
+    background:rgba(0,0,0,.3);    
+    padding:8px 16px;    
+    border-radius:999px;    
+    border: 1px solid var(--border);    
+}    
+    
+.switch-label{    
+    font-weight:bold;    
+    font-size:0.85rem;    
+    color:#ffd000;    
+}    
+    
+.switch{    
+    position:relative;    
+    display:inline-block;    
+    width:50px;    
+    height:26px;    
+}    
+    
+.switch input{    
+    opacity:0;    
+    width:0;    
+    height:0;    
+}    
+    
+.slider{    
+    position:absolute;    
+    cursor:pointer;    
+    inset:0;    
+    background-color:#222;    
+    transition:.3s;    
+    border-radius:34px;    
+    border: 1px solid rgba(255,255,255,.05);    
+}    
+    
+.slider:before{    
+    position:absolute;    
+    content:"";    
+    height:18px;    
+    width:18px;    
+    left:3px;    
+    bottom:3px;    
+    background-color:white;    
+    transition:.3s;    
+    border-radius:50%;    
+}    
+    
+input:checked + .slider{    
+    background:var(--gradient-gold);    
+}    
+    
+input:checked + .slider:before{    
+    transform:translateX(24px);    
+}    
+    
+.stats{    
+    display:grid;    
+    grid-template-columns:1fr 1fr;    
+    gap:18px;    
+    margin-bottom:25px;    
+}    
+    
+.stat-card{    
+    padding:20px;    
+    border-radius:24px;    
+}    
+    
+.stat-card h2{    
+    font-size:2.2rem;    
+    margin-top:8px;    
+    font-weight:800;    
+}    
+    
+#filaEsperaNum {    
+    color:#d946ef;    
+    transition: color 0.3s;    
+}    
+    
+.grid{    
+    display:flex;    
+    flex-direction:column;    
+    gap:20px;    
+}    
+    
+.module-card{    
+    padding:24px;    
+    border-radius:24px;    
+}    
+    
+.module-top{    
+    display:flex;    
+    justify-content:space-between;    
+    align-items:center;    
+}    
+    
+.module-title{    
+    font-size:1.5rem;    
+    font-weight:800;    
+}    
+    
+.module-desc{    
+    font-size:.95rem;    
+    line-height:1.6;    
+    color:#9d9db1;    
+    margin:12px 0 20px;    
+}    
+    
+.badge{    
+    padding:6px 12px;    
+    border-radius:999px;    
+    font-weight:800;    
+    font-size:.75rem;    
+}    
+    
+.online{    
+    background:rgba(0,255,136,.12);    
+    color:#00ff88;    
+}    
+    
+.beta{    
+    background:rgba(255,215,0,.12);    
+    color:#ffd700;    
+}    
+    
+.btn{    
+    width:100%;    
+    padding:16px;    
+    border:none;    
+    border-radius:18px;    
+    font-weight:800;    
+    font-size:1rem;    
+    cursor:pointer;    
+    text-align:center;    
+}    
+    
+.btn-primary{    
+    background:var(--gradient-normal);    
+    color:white;    
+    box-shadow: 0 4px 12px rgba(168,85,247,.2);    
+}    
+    
+.btn-secondary{    
+    background:transparent;    
+    border:1px solid var(--border);    
+    color:#d4d4e2;    
+    margin-top:12px;    
+}    
+    
+.btn-beta{    
+    background: var(--gradient-gold);    
+    color:white;    
+    font-weight:800;    
+    margin-bottom:15px;    
+    box-shadow: 0 4px 16px rgba(255,120,0,.3);    
+}    
+    
+.bottom-nav{    
+    position:fixed;    
+    bottom:16px;    
+    left:50%;    
+    transform:translateX(-50%);    
+    width:92%;    
+    max-width:460px;    
+    padding:12px;    
+    border-radius:999px;    
+    display:flex;    
+    justify-content:space-around;    
+    background:#0c0c10;    
+    border: 1px solid var(--border);    
+    z-index:999;    
+}    
+    
+.nav-btn{    
+    background:none;    
+    border:none;    
+    color:#8e8ea0;    
+    font-weight:700;    
+    font-size:0.95rem;    
+    cursor:pointer;    
+}    
+    
+.nav-btn.active{    
+    color:white;    
+}    
+    
+.modal{    
+    position:fixed;    
+    inset:0;    
+    background:rgba(0,0,0,.85);    
+    display:none;    
+    align-items:center;    
+    justify-content:center;    
+    padding:20px;    
+    z-index:9999;    
+}    
+    
+.modal-box{    
+    width:100%;    
+    max-width:500px;    
+    padding:28px;    
+    border-radius:24px;    
+    text-align:center;    
+}    
+    
+.progress-container{    
+    width:100%;    
+    height:8px;    
+    border-radius:999px;    
+    overflow:hidden;    
+    margin:20px 0;    
+    background: rgba(255,255,255,.05);    
+}    
+    
+.progress-bar{    
+    width:0%;    
+    height:100%;    
+    border-radius:999px;    
+    background: var(--gradient-gold);    
+    transition:width .08s linear;    
+    box-shadow: 0 0 12px rgba(255,140,0,.4);    
+}    
+    
+.logs{    
+    background:#020202;    
+    border: 1px solid rgba(0,255,120,.15);    
+    box-shadow: 0 0 12px rgba(0,255,120,.12);    
+    font-family:monospace;    
+    font-size:.82rem;    
+    color:#39ff14;    
+    height:140px;    
+    overflow-y:auto;    
+    padding:14px;    
+    border-radius:14px;    
+    line-height:1.6;    
+    position:relative;    
+    animation:flicker 2s infinite;    
+}    
+    
+.logs::after{    
+    content:'';    
+    position:absolute;    
+    top:0;    
+    left:-100%;    
+    width:100%;    
+    height:100%;    
+    background: linear-gradient(90deg, transparent, rgba(0,255,120,.08), transparent);    
+    animation:scan 2.5s linear infinite;    
+}    
+    
+.input-group{    
+    margin-bottom:18px;    
+}    
+    
+.input-group label{    
+    display:block;    
+    font-size:.75rem;    
+    margin-bottom:8px;    
+    text-transform:uppercase;    
+    font-weight:700;    
+    color:#b5b5c3;    
+}    
+    
+.input-group select{    
+    width:100%;    
+    padding:16px;    
+    border-radius:16px;    
+    border: 1px solid rgba(255,255,255,.07);    
+    background:rgba(0,0,0,.45);    
+    color:white;    
+    outline:none;    
+}    
 
-<div class="page-container">
+@keyframes scan{ 0%{ left:-100%; } 100%{ left:100%; } }    
+@keyframes flicker{ 0%{ opacity:1; } 50%{ opacity:.96; } 100%{ opacity:1; } }    
+@keyframes pulse{ 0%{ transform:scale(1); } 50%{ transform:scale(1.08); } 100%{ transform:scale(1); } }    
+    
+.beta-mode .glass,    
+.beta-mode .module-card,    
+.beta-mode .stat-card,    
+.beta-mode .status-panel,    
+.beta-mode .modal-box{    
+    border: 1px solid rgba(255,120,0,.35);    
+    box-shadow: 0 0 15px rgba(255,80,0,.18), 0 0 28px rgba(255,215,0,.10);    
+}    
+    
+body.beta-mode h1,    
+body.beta-mode .module-title,    
+body.beta-mode .user-info-title{    
+    background: var(--gradient-gold);    
+    -webkit-background-clip:text;    
+    -webkit-text-fill-color:transparent;    
+}    
+    
+body.beta-mode .btn-primary{    
+    background: var(--gradient-gold);    
+    color:white;    
+    box-shadow: 0 4px 18px rgba(255,120,0,.35);    
+}    
+    
+body.beta-mode #filaEsperaNum {    
+    background: var(--gradient-gold);    
+    -webkit-background-clip: text;    
+    -webkit-text-fill-color: transparent;    
+}    
+    
+</style>    
+</head>    
+<body>    
+    
+<div id="dashboardPage" class="page">    
+    <div class="logo" style="display:flex;justify-content:space-between;align-items:center;">    
+        <!-- Nickname e RA carregados via Script dinâmico -->    
+        <h1 id="userHeaderTitle" class="user-info-title">Vini | RA: 1234567</h1>    
+        <div class="switch-container">    
+            <span class="switch-label" id="switchTexto">FREE</span>    
+            <label class="switch">    
+                <input type="checkbox" id="betaSwitch" onchange="ativarBeta()">    
+                <span class="slider"></span>    
+            </label>    
+        </div>    
+    </div>    
 
-    <div class="topbar">
-        <h1>Dashboard IA</h1>
-        <a href="index.html">Voltar</a>
-    </div>
+    <div class="status-panel glass">    
+        <div>    
+            <h3 style="font-size:1rem;color:#9d9db1;">Status do Plano</h3>    
+        </div>    
+        <div class="status-indicator">    
+            <h2 id="statusPlano" class="free-status"><span class="status-dot free"></span>ON FREE</h2>    
+        </div>    
+    </div>    
 
-    <div class="stats-grid">
+    <div class="stats">    
+        <div class="stat-card glass">    
+            <small style="color:#9d9db1;">Execuções Ativas</small>    
+            <h2>27</h2>    
+        </div>    
+        <div class="stat-card glass">    
+            <small style="color:#9d9db1;">Fila de Espera</small>    
+            <h2 id="filaEsperaNum">12</h2>    
+        </div>    
+    </div>    
 
-        <div class="card">
-            <small>Execuções</small>
-            <h2>27</h2>
-        </div>
+    <div class="grid">    
+        <div class="module-card glass">    
+            <div class="module-top">    
+                <span class="module-title">KuroSpeak IA</span>    
+                <span class="badge online">ONLINE</span>    
+            </div>    
+            <p class="module-desc">Sistema inteligente de automação.</p>    
+            <button class="btn btn-primary" onclick="abrirModal('KuroSpeak IA')">Injetar Módulo</button>    
+        </div>    
+        <div class="module-card glass">    
+            <div class="module-top">    
+                <span class="module-title">GhostWriter Pro</span>    
+                <span class="badge beta">BETA</span>    
+            </div>    
+            <p class="module-desc">Sistema avançado de geração.</p>    
+            <button class="btn btn-primary" onclick="abrirModal('GhostWriter Pro')">Injetar Módulo</button>    
+        </div>    
+    </div>    
+</div>    
+    
+<div class="bottom-nav" id="menuFixo">    
+    <button class="nav-btn active">Home</button>    
+    <button class="nav-btn" onclick="deslogarSistema()">Sair</button>    
+</div>    
 
-        <div class="card">
-            <small>Fila</small>
-            <h2>12</h2>
-        </div>
+<div class="modal" id="taskModal">    
+    <div class="modal-box glass" id="modalContent"></div>    
+</div>    
+    
+<script>    
+function ativarBeta(){    
+    document.body.classList.toggle('beta-mode');    
+    const status = document.getElementById('statusPlano');    
+    const texto = document.getElementById('switchTexto');    
+    
+    if(document.body.classList.contains('beta-mode')){    
+        status.className = 'beta-status';    
+        status.innerHTML = `<span class="status-dot beta"></span>ON BETA`;    
+        texto.innerText='BETA';    
+        texto.style.background = 'linear-gradient(90deg,#ff2d55,#ff6b00,#ffd700)';    
+        texto.style.webkitBackgroundClip='text';    
+        texto.style.webkitTextFillColor='transparent';    
+    }else{    
+        status.className = 'free-status';    
+        status.innerHTML = `<span class="status-dot free"></span>ON FREE`;    
+        texto.innerText='FREE';    
+        texto.style.background='none';    
+        texto.style.webkitTextFillColor='#ffd000';    
+        texto.style.color='#ffd000';    
+    }    
+}    
+    
+function abrirModal(nome){    
+    const caixa = document.getElementById('modalContent');    
+    const estaBeta = document.body.classList.contains('beta-mode');    
+    const textoBotao = estaBeta ? 'Obrigado por participar da Beta ❤️' : 'Torne-se membro de acesso antecipado';    
+    
+    caixa.innerHTML= `    
+        <h2 style="margin-bottom:10px;">Configurar: ${nome}</h2>    
+        <div class="input-group" style="text-align:left;">    
+            <label>Plataforma Alvo</label>    
+            <select>    
+                <option>CMSP</option>    
+                <option>Leia SP</option>    
+            </select>    
+        </div>    
+        <button class="btn btn-beta">${textoBotao}</button>    
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">    
+            <button class="btn btn-primary" onclick="dispararScript()">Iniciar</button>    
+            <button class="btn btn-secondary" onclick="fecharModal()" style="margin:0;">Fechar</button>    
+        </div>    
+    `;    
+    document.getElementById('taskModal').style.display='flex';    
+}    
+    
+function fecharModal(){    
+    document.getElementById('taskModal').style.display='none';    
+}    
+    
+function dispararScript(){    
+    const caixa = document.getElementById('modalContent');    
+    caixa.innerHTML= `    
+        <h2 style="margin-bottom:15px;font-size:1.4rem;">Executando Sistema</h2>    
+        <div class="progress-container">    
+            <div class="progress-bar" id="pBar"></div>    
+        </div>    
+        <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:#8e8ea0;margin-bottom:10px;">    
+            <span id="pStatus">Inicializando...</span>    
+            <span id="pPorcentagem">0%</span>    
+        </div>    
+        <div class="logs" id="pLogs"></div>    
+    `;    
+    
+    const bar = document.getElementById('pBar');    
+    const pct = document.getElementById('pPorcentagem');    
+    const logs = document.getElementById('pLogs');    
+    const status = document.getElementById('pStatus');    
+    let progresso = 0;    
+    
+    const mensagens = [    
+        {p:5, s:'Conectando...', m:'[SYS] Inicializando núcleo principal...'},    
+        {p:14, s:'Autenticando...', m:'[AUTH] Validando credenciais temporárias...'},    
+        {p:24, s:'Sincronizando...', m:'[SYNC] Estabelecendo comunicação segura...'},    
+        {p:35, s:'Preparando...', m:'[CORE] Carregando bibliotecas internas...'},    
+        {p:48, s:'Analisando...', m:'[SCAN] Escaneando ambiente operacional...'},    
+        {p:60, s:'Executando...', m:'[EXEC] Iniciando automação inteligente...'},    
+        {p:74, s:'Processando...', m:'[AI] Sistema neural interpretando respostas...'},    
+        {p:86, s:'Compactando...', m:'[PACK] Compactando dados finais...'},    
+        {p:96, s:'Finalizando...', m:'[UPLOAD] Enviando pacotes ao servidor...'},    
+        {p:100, s:'Concluído', m:'[SUCCESS] Operação concluída sem falhas.'}    
+    ];    
+    
+    function escreverLog(texto){    
+        let i = 0;    
+        const linha = document.createElement('div');    
+        logs.appendChild(linha);    
+        const typing = setInterval(()=>{    
+            linha.innerHTML += texto.charAt(i);    
+            logs.scrollTop = logs.scrollHeight;    
+            i++;    
+            if(i >= texto.length){    
+                clearInterval(typing);    
+            }    
+        },18);    
+    }    
+    
+    const intervalo = setInterval(()=>{    
+        progresso += 1;    
+        bar.style.width = progresso + '%';    
+        pct.innerText = progresso + '%';    
+        const atual = mensagens.find(x => x.p === progresso);    
+        if(atual){    
+            status.innerText = atual.s;    
+            escreverLog(atual.m);    
+        }    
+        if(progresso >= 100){    
+            clearInterval(intervalo);    
+            setTimeout(()=>{    
+                caixa.innerHTML= `    
+                    <div style="font-size:4rem;margin-bottom:15px;animation:pulse .8s infinite;color:#00ff88;">✓</div>    
+                    <h2 style="margin-bottom:10px;font-size:1.5rem;">Sistema Finalizado</h2>    
+                    <p style="color:#8e8ea0;font-size:.9rem;line-height:1.6;">Execução concluída com sucesso. Nenhuma falha detectada.</p>    
+                    <button class="btn btn-primary" style="margin-top:20px;" onclick="fecharModal()">Concluir</button>    
+                `;    
+            },900);    
+        }    
+    },45);    
+}    
 
-    </div>
-
-    <div class="module-card">
-        <h2>KuroSpeak IA</h2>
-        <p>Sistema inteligente de automação.</p>
-        <button>Iniciar</button>
-    </div>
-
-    <div class="module-card">
-        <h2>GhostWriter Pro</h2>
-        <p>Geração inteligente avançada.</p>
-        <button>Executar</button>
-    </div>
-
-</div>
-
-</body>
+function deslogarSistema(){    
+    alert("Lógica de Deslogar / Redirecionar para tela de login aqui.");
+}    
+</script>    
+</body>    
 </html>
