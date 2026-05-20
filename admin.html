@@ -1,42 +1,408 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Gold</title>
-<link rel="stylesheet" href="assets/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sala sem Futuro OS - Gold Management</title>
+    <style>
+        :root {
+            /* PALETA GOLD NITRO */
+            --bg: #09090d;
+            --card: #111118;
+            --border: rgba(212, 175, 55, 0.12);
+            --primary: #d4af37; /* Ouro Clássico */
+            --secondary: #f3e5ab; /* Ouro Claro/Brilhante */
+            --gold-glow: rgba(212, 175, 55, 0.35);
+            --text: #ffffff;
+            --muted: #9fa0a6;
+            
+            /* Status auxiliares mantidos para leitura limpa */
+            --green: #2ecc71;
+            --red: #e74c3c;
+            --blue: #3498db;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+            position: relative;
+        }
+
+        /* Efeito de background sutil */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: url('https://i.postimg.cc/gky5YNH2/1778823817951-3.jpg') center/cover no-repeat;
+            opacity: .02;
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(5,5,8,0.85), rgba(5,5,8,0.98));
+            z-index: -1;
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; }
+
+        /* Header Gold Nitro */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .admin-header h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+        .admin-header h1 span { 
+            background: linear-gradient(135deg, #ffe066, #d4af37, #aa7c11);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-back {
+            background: rgba(212, 175, 55, 0.05); 
+            border: 1px solid var(--border); 
+            color: var(--primary);
+            padding: 10px 18px; border-radius: 12px; cursor: pointer; font-weight: 700;
+            text-decoration: none; font-size: 0.9rem; transition: 0.3s;
+        }
+        .btn-back:hover { 
+            color: white; 
+            border-color: var(--primary);
+            box-shadow: 0 0 12px var(--gold-glow);
+        }
+
+        /* Grid Principal de Blocos */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 968px) {
+            .admin-grid { grid-template-columns: 1fr; }
+        }
+
+        .panel-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+            transition: border-color 0.3s;
+        }
+        .panel-box:hover {
+            border-color: rgba(212, 175, 55, 0.25);
+        }
+
+        .panel-box h3 {
+            font-size: 1.2rem; font-weight: 800; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Formulários Customizados */
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.15); background: rgba(0,0,0,.5); color: white; outline: none;
+            transition: 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px var(--gold-glow);
+        }
+        .form-group textarea { resize: none; height: 70px; }
+
+        /* Botão Enviar Estilo Nitro */
+        .btn-submit {
+            width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 800; font-size: 0.95rem;
+            background: linear-gradient(135deg, #f3e5ab, #d4af37, #aa7c11); 
+            color: #111; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        }
+        .btn-submit:hover { 
+            transform: translateY(-1px); 
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+            filter: brightness(1.1);
+        }
+
+        /* Lista de Equipe */
+        .team-list { display: flex; flex-direction: column; gap: 12px; max-height: 280px; overflow-y: auto; }
+        .team-member {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 18px; background: rgba(212,175,55,0.02); border: 1px solid rgba(212,175,55,0.06); border-radius: 16px;
+        }
+        .member-info h4 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .member-info p { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+        
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .dot-online { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
+        .dot-offline { background: #444; }
+
+        /* Quadro de Tarefas Direcionadas */
+        .task-board { display: flex; flex-direction: column; gap: 12px; max-height: 480px; overflow-y: auto; }
+        .task-card {
+            background: rgba(0,0,0,0.4); border-left: 4px solid var(--primary); padding: 16px; border-radius: 0 16px 16px 0;
+            border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+        }
+        .task-card.high { border-left-color: var(--red); }
+        .task-card.done { border-left-color: #333; opacity: 0.4; }
+
+        .task-header { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+        .task-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; color: #fff; }
+        .task-desc { font-size: 0.85rem; color: #b9bbbe; line-height: 1.4; margin-bottom: 10px; }
+        
+        .task-footer { display: flex; justify-content: space-between; align-items: center; }
+        .task-user { font-size: 0.8rem; background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.1); padding: 4px 10px; border-radius: 999px; font-weight: 600; color: var(--secondary); }
+
+        .badge-status { font-size: 0.75rem; font-weight: 800; cursor: pointer; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 5px 10px; border-radius: 8px; }
+        .badge-status:hover { background: rgba(212,175,55,0.1); border-color: var(--primary); color: #fff !important; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.15); border-radius: 999px; }
+    </style>
 </head>
 <body>
 
-<div class="page-container">
+    <div class="container">
+        <!-- HEADER -->
+        <header class="admin-header">
+            <div>
+                <h1>Painel de <span>Operações Gold</span></h1>
+            </div>
+            <a href="index.html" class="btn-back">← Sair do Modo Gold</a>
+        </header>
 
-    <div class="topbar">
-        <h1>Admin Gold</h1>
-        <a href="index.html">Voltar</a>
+        <!-- PRIMEIRA LINHA: GESTÃO DA EQUIPE -->
+        <div class="admin-grid">
+            
+            <!-- BLOCO 1: INTEGRANTES DA EQUIPE -->
+            <div class="panel-box">
+                <h3>👑 Staff Especializada</h3>
+                <div class="team-list" id="listaEquipe">
+                    <div class="team-member">
+                        <div class="member-info">
+                            <h4><span class="status-dot dot-online"></span> Você (Dono)</h4>
+                            <p>Acesso total • 32 Tarefas entregues</p>
+                        </div>
+                        <span style="color: var(--primary); font-size: 0.8rem; font-weight: 800; letter-spacing: 0.5px;">OWNER</span>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-info">
+                            <h4><span class="status-dot dot-online"></span> Kuro</h4>
+                            <p>Infraestrutura / API • 14 Tarefas entregues</p>
+                        </div>
+                        <span style="color: var(--secondary); font-size: 0.8rem; font-weight: 700;">MODERADOR</span>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-info">
+                            <h4><span class="status-dot dot-offline"></span> Vini_Dev</h4>
+                            <p>Suporte Técnico • 8 Tarefas entregues</p>
+                        </div>
+                        <span style="color: var(--muted); font-size: 0.8rem; font-weight: 700;">SUPORTE</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOCO 2: ADICIONAR NOVO MEMBRO -->
+            <div class="panel-box">
+                <h3>✨ Recrutar Operador</h3>
+                <form id="formMembro" onsubmit="adicionarMembro(event)">
+                    <div class="form-group">
+                        <label>Nome do Usuário</label>
+                        <input type="text" id="nomeMembro" placeholder="Ex: Lucas_Admin" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cargo / Função</label>
+                        <select id="cargoMembro">
+                            <option value="MODERADOR">Moderador / Operador</option>
+                            <option value="SUPORTE">Suporte Técnico</option>
+                            <option value="DEV">Desenvolvedor Auxiliar</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-submit">Vincular Novo Membro</button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- SEGUNDA LINHA: DISTRIBUIÇÃO DE TAREFAS -->
+        <div class="admin-grid">
+            
+            <!-- BLOCO 3: DIRECIONADOR DE TAREFAS -->
+            <div class="panel-box">
+                <h3>🔱 Despachar Ordem de Serviço</h3>
+                <form id="formTarefa" onsubmit="criarTarefa(event)">
+                    <div class="form-group">
+                        <label>Título do Objetivo</label>
+                        <input type="text" id="tituloTarefa" placeholder="Ex: Corrigir Bypass do CMSP" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição do que deve ser feito</label>
+                        <textarea id="descTarefa" placeholder="Descreva os detalhes operacionais para o encarregado..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Direcionar para quem?</label>
+                        <select id="responsavelTarefa">
+                            <option value="Kuro">Kuro</option>
+                            <option value="Vini_Dev">Vini_Dev</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Prioridade de Execução</label>
+                        <select id="prioridadeTarefa">
+                            <option value="normal">Normal (Dourada)</option>
+                            <option value="high">ALERTA CRÍTICO (Vermelha)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-submit">Disparar Diretriz para o Time</button>
+                </form>
+            </div>
+
+            <!-- BLOCO 4: QUADRO DE TAREFAS ATIVAS -->
+            <div class="panel-box">
+                <h3>📊 Fluxo Operacional Ativo</h3>
+                <div class="task-board" id="quadroTarefas">
+                    
+                    <!-- Tarefa Exemplo 1 -->
+                    <div class="task-card high">
+                        <div class="task-header">
+                            <span>ID: #102</span>
+                            <span style="color: var(--red);">CRÍTICO</span>
+                        </div>
+                        <div class="task-title">Monitorar queda do banco de dados</div>
+                        <div class="task-desc">Alguns RAs estão demorando para validar no login. Verificar logs locais.</div>
+                        <div class="task-footer">
+                            <span class="task-user">👤 Encarregado: <b>Kuro</b></span>
+                            <button class="badge-status" style="color: #ffcc00;" onclick="alterarStatus(this)">⚡ EM PROGRESSO</button>
+                        </div>
+                    </div>
+
+                    <!-- Tarefa Exemplo 2 -->
+                    <div class="task-card">
+                        <div class="task-header">
+                            <span>ID: #101</span>
+                            <span>REGULAR</span>
+                        </div>
+                        <div class="task-title">Atualizar imagens dos planos VIP</div>
+                        <div class="task-desc">Trocar a URL antiga do PostImage pelas novas fotos de visualização da dashboard.</div>
+                        <div class="task-footer">
+                            <span class="task-user">👤 Encarregado: <b>Vini_Dev</b></span>
+                            <button class="badge-status" style="color: var(--primary);" onclick="alterarStatus(this)">🏆 CONCLUÍDO</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <div class="card">
-        <h2>Equipe Online</h2>
-        <p>3 operadores conectados</p>
-    </div>
+    <script>
+        // CONFIGURAÇÃO DE SEGURANÇA CHAVE MASTER DO DONO
+        const SENHA_MESTRE_DONO = "admin123";
 
-    <div class="card">
-        <h2>Tarefas Ativas</h2>
-        <p>12 execuções simultâneas</p>
-    </div>
+        function adicionarMembro(e) {
+            e.preventDefault();
+            const nome = document.getElementById('nomeMembro').value;
+            const cargo = document.getElementById('cargoMembro').value;
+            const lista = document.getElementById('listaEquipe');
+            const selectResponsaveis = document.getElementById('responsavelTarefa');
 
-    <div class="module-card">
-        <h2>Despachar Ordem</h2>
+            const novoMembro = document.createElement('div');
+            novoMembro.className = 'team-member';
+            novoMembro.innerHTML = `
+                <div class="member-info">
+                    <h4><span class="status-dot dot-online"></span> ${nome}</h4>
+                    <p>Recém adicionado • 0 entregas</p>
+                </div>
+                <span style="color: var(--primary); font-size: 0.8rem; font-weight: 700;">${cargo}</span>
+            `;
+            lista.appendChild(novoMembro);
 
-        <input type="text" placeholder="Título">
+            const novaOpcao = document.createElement('option');
+            novaOpcao.value = nome;
+            novaOpcao.innerText = nome;
+            selectResponsaveis.appendChild(novaOpcao);
 
-        <textarea placeholder="Descrição"></textarea>
+            document.getElementById('formMembro').reset();
+        }
 
-        <button>Enviar Ordem</button>
+        function criarTarefa(e) {
+            e.preventDefault();
+            const titulo = document.getElementById('tituloTarefa').value;
+            const desc = document.getElementById('descTarefa').value;
+            const quem = document.getElementById('responsavelTarefa').value;
+            const prioridade = document.getElementById('prioridadeTarefa').value;
+            
+            const quadro = document.getElementById('quadroTarefas');
+            const idAleatorio = Math.floor(Math.random() * 90) + 100;
 
-    </div>
+            const classePrioridade = prioridade === 'high' ? 'task-card high' : 'task-card';
+            const textoPrioridade = prioridade === 'high' ? '<span style="color: var(--red);">CRÍTICO</span>' : '<span>REGULAR</span>';
 
-</div>
+            const novaTarefa = document.createElement('div');
+            novaTarefa.className = classePrioridade;
+            novaTarefa.innerHTML = `
+                <div class="task-header">
+                    <span>ID: #${idAleatorio}</span>
+                    ${textoPrioridade}
+                </div>
+                <div class="task-title">${titulo}</div>
+                <div class="task-desc">${desc}</div>
+                <div class="task-footer">
+                    <span class="task-user">👤 Encarregado: <b>${quem}</b></span>
+                    <button class="badge-status" style="color: #61b5ff;" onclick="alterarStatus(this)">🔵 EM FILA</button>
+                </div>
+            `;
 
+            quadro.insertBefore(novaTarefa, quadro.firstChild);
+            document.getElementById('formTarefa').reset();
+        }
+
+        function alterarStatus(botao) {
+            if (botao.innerText === "🔵 EM FILA") {
+                botao.innerText = "⚡ EM PROGRESSO";
+                botao.style.color = "#ffcc00";
+            } 
+            else if (botao.innerText === "⚡ EM PROGRESSO") {
+                const senhaDigitada = prompt("🛡️ Aprovação Master necessária. Insira a Chave Ouro:");
+                
+                if (senhaDigitada === SENHA_MESTRE_DONO) {
+                    botao.innerText = "🏆 CONCLUÍDO";
+                    botao.style.color = "var(--primary)";
+                    botao.closest('.task-card').classList.add('done');
+                } else if (senhaDigitada !== null) {
+                    alert("Senha inválida. Operação recusada.");
+                }
+            } 
+            else if (botao.innerText === "🏆 CONCLUÍDO") {
+                const senhaDigitada = prompt("⚠️ Deseja arquivar e apagar permanentemente este registro? Confirme a senha:");
+                
+                if (senhaDigitada === SENHA_MESTRE_DONO) {
+                    botao.closest('.task-card').remove();
+                } else if (senhaDigitada !== null) {
+                    alert("Senha incorreta!");
+                }
+            }
+        }
+    </script>
 </body>
 </html>
