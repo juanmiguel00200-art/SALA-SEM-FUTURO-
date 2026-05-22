@@ -5,116 +5,83 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">    
 <title>Sala sem Futuro OS - Login</title>    
 <style>    
-    
-:root{    
-    --bg:#07070a;    
-    --card:#0f0f16;    
-    --border:rgba(255,255,255,.08);    
+:root{
+    --bg:#07070a;
+    --card:#0f0f16;
+    --border:rgba(255,255,255,.08);
     --red:#ff3333;
-    
-    --gradient-normal:    
-    linear-gradient(    
-        135deg,    
-        #8b5cf6,    
-        #d946ef    
-    );    
+    --gradient-normal: linear-gradient(135deg, #8b5cf6, #d946ef);
 }    
-    
-*{    
-    margin:0;    
-    padding:0;    
-    box-sizing:border-box;    
-    font-family:'Segoe UI',sans-serif;    
-}    
-    
-body{    
-    background:#050507;    
-    color:white;    
-    overflow-x:hidden;    
-    min-height:100vh;    
-    position:relative;    
+*{ margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }    
+body{
+    background:#050507;
+    color:white;
+    min-height:100vh;
     display: flex;
     align-items: center;
     justify-content: center;
 }    
-    
-body::after{    
-    content:'';    
-    position:fixed;    
-    inset:0;    
-    background:    
-    linear-gradient(    
-        to bottom,    
-        rgba(0,0,0,.7),    
-        rgba(0,0,0,.9)    
-    );    
-    z-index:-1;    
+body::after{
+    content:'';
+    position:fixed;
+    inset:0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.7), rgba(0,0,0,.9));
+    z-index:-1;
 }    
-    
-.login-container{    
+.login-container{
     width:100%;
-    max-width:420px;    
+    max-width:420px;
     padding: 0 15px;
 }    
-    
-.logo{    
-    display:flex;    
-    align-items:center;    
-    gap:12px;    
-    margin-bottom:28px;    
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:28px;
 }    
-    
-.logo img{    
-    width:42px;    
-    height:42px;    
-    border-radius:12px;    
+.logo img{
+    width:42px;
+    height:42px;
+    border-radius:12px;
 }    
-    
-.logo h1{    
-    font-size:1.9rem;    
-    font-weight:800;    
+.logo h1{
+    font-size:1.9rem;
+    font-weight:800;
 }    
-    
-.glass{    
-    background:#0f0f14;    
-    border: 1px solid var(--border);    
-    box-shadow: 0 8px 24px rgba(0,0,0,.5);    
+.glass{
+    background:#0f0f14;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 24px rgba(0,0,0,.5);
 }    
-    
-.login-box{    
-    padding:28px;    
-    border-radius:24px;    
+.login-box{
+    padding:28px;
+    border-radius:24px;
 }    
-    
-.input-group{    
-    margin-bottom:18px;    
+.input-group{
+    margin-bottom:18px;
     position: relative;
 }    
-    
-.input-group label{    
-    display:block;    
-    font-size:.75rem;    
-    margin-bottom:8px;    
-    text-transform:uppercase;    
-    font-weight:700;    
-    color:#b5b5c3;    
+.input-group label{
+    display:block;
+    font-size:.75rem;
+    margin-bottom:8px;
+    text-transform:uppercase;
+    font-weight:700;
+    color:#b5b5c3;
 }    
-    
-.input-group input{    
-    width:100%;    
-    padding:16px;    
-    border-radius:16px;    
-    border: 1px solid rgba(255,255,255,.07);    
-    background:rgba(0,0,0,.45);    
-    color:white;    
-    outline:none;    
+.input-group input{
+    width:100%;
+    padding:16px;
+    border-radius:16px;
+    border: 1px solid rgba(255,255,255,.07);
+    background:rgba(0,0,0,.45);
+    color:white;
+    outline:none;
     transition: border-color 0.3s;
 }    
-
 .input-group input.invalid {
     border-color: var(--red) !important;
 }
-
 .error-msg {
     display: none;
     color: var(--red);
@@ -122,55 +89,43 @@ body::after{
     margin-top: 6px;
     font-weight: 600;
 }
-    
-.password-wrapper{    
-    position:relative;    
+.password-wrapper{ position:relative; }    
+.eye-btn{
+    position:absolute;
+    right:14px;
+    top:50%;
+    transform:translateY(-50%);
+    background:none;
+    border:none;
+    font-size:1.2rem;
+    cursor:pointer;
 }    
-    
-.eye-btn{    
-    position:absolute;    
-    right:14px;    
-    top:50%;    
-    transform:translateY(-50%);    
-    background:none;    
-    border:none;    
-    font-size:1.2rem;    
-    cursor:pointer;    
+.btn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:18px;
+    font-weight:800;
+    font-size:1rem;
+    cursor:pointer;
+    text-align:center;
 }    
-    
-.btn{    
-    width:100%;    
-    padding:16px;    
-    border:none;    
-    border-radius:18px;    
-    font-weight:800;    
-    font-size:1rem;    
-    cursor:pointer;    
-    text-align:center;    
+.btn-primary{
+    background:var(--gradient-normal);
+    color:white;
+    box-shadow: 0 4px 12px rgba(168,85,247,.2);
 }    
-    
-.btn-primary{    
-    background:var(--gradient-normal);    
-    color:white;    
-    box-shadow: 0 4px 12px rgba(168,85,247,.2);    
-}    
-    
-.btn-discord {    
-    background: #5865F2;    
-    color: white;    
-    display: flex;    
-    align-items: center;    
-    justify-content: center;    
-    gap: 10px;    
-    margin-top: 15px;    
-    box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);    
-    transition: background 0.2s;    
-}    
-    
-.btn-discord:hover {    
-    background: #4752C4;    
-}    
-    
+.btn-discord {
+    background: #5865F2;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    transition: background 0.2s;
+}
+.btn-discord:hover { background: #4752C4; }
 </style>    
 </head>    
 <body>    
@@ -195,23 +150,22 @@ body::after{
         </div>    
         <button class="btn btn-primary" onclick="realizarLoginManual()">Iniciar</button>    
         
-        <!-- Botão do Discord -->    
         <button class="btn btn-discord" onclick="loginComDiscord()">    
             <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a74.37,74.37,0,0,0,6.66-10.85,68.43,68.43,0,0,1-10.5-5c.88-.65,1.72-1.33,2.53-2A75.52,75.52,0,0,0,96.53,78.5c.81.71,1.65,1.38,2.53,2a68.42,68.42,0,0,1-10.5,5,74.37,74.37,0,0,0,6.66,10.85,105.73,105.73,0,0,0,31.06-18.83C129.9,48.55,123.86,25.79,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,82.69,40.36,94.07,46,94.07,53,89,65.69,82.69,65.69Z"/></svg>    
             Entrar com o Discord    
         </button>    
     </div>    
 </div>    
-    
+
 <script>    
 const CLIENT_ID = 'SEU_CLIENT_ID_AQUI';    
 const REDIRECT_URI = window.location.href.split('#')[0].split('?')[0];    
-    
-function toggleSenha()){    
+
+function toggleSenha(){    
     const input = document.getElementById('senhaInput');    
     input.type = input.type === 'password' ? 'text' : 'password';    
 }    
-    
+
 function realizarLoginManual(){    
     const raInput = document.getElementById('raInput');
     const raVal = raInput.value.trim();    
@@ -224,8 +178,12 @@ function realizarLoginManual(){
         return; 
     }
 
-    alert(`Logando com o RA: ${raVal}`);
-    // Aqui entra o redirecionamento ou lógica pós-login
+    // Salvar RA no localStorage para usar em todas as páginas
+    localStorage.setItem('sala_sem_futuro_ra', raVal);
+    localStorage.setItem('sala_sem_futuro_logged', 'true');
+    
+    // Redirecionar para dashboard
+    window.location.href = 'dashboard.html';
 }    
 
 function limparErro() {
