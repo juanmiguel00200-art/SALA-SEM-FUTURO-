@@ -4,42 +4,75 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sala sem Futuro OS</title>
-<link rel="stylesheet" href="assets/style.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
+body {
+    background: #050507;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url('https://i.postimg.cc/gky5YNH2/1778823817951-3.jpg') center/cover no-repeat;
+    opacity: .05;
+    z-index: -2;
+}
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #050507, #0a0a12);
+    z-index: -1;
+}
+.hub-container { text-align: center; padding: 40px 20px; max-width: 900px; margin: 0 auto; }
+.hub-title { font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, #ffe066, #d4af37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; }
+.hub-subtitle { color: #8e8ea0; margin-bottom: 48px; font-size: 1.1rem; }
+.hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+.hub-card {
+    background: #0f0f16;
+    border: 1px solid rgba(212,175,55,.15);
+    border-radius: 24px;
+    padding: 32px 24px;
+    text-decoration: none;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+.hub-card:hover { border-color: #d4af37; transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.5); }
+.hub-card h2 { color: #d4af37; margin-bottom: 12px; font-size: 1.5rem; }
+.hub-card p { color: #8e8ea0; font-size: 0.9rem; }
+.hub-card small { display: block; margin-top: 12px; font-size: 0.7rem; color: #555; }
+</style>
 </head>
-<body class="hub-body">
-
+<body>
 <div class="hub-container">
-
     <h1 class="hub-title">Sala sem Futuro OS</h1>
-    <p class="hub-subtitle">
-        Sistema operacional visual • Preview Demonstrativo
-    </p>
-
+    <p class="hub-subtitle">Sistema operacional visual • Plataforma Unificada</p>
     <div class="hub-grid">
-
         <a href="login.html" class="hub-card">
             <h2>🔐 Login</h2>
-            <p>Tela principal do usuário</p>
+            <p>Acessar plataforma</p>
+            <small>Entrar com RA</small>
         </a>
-
         <a href="dashboard.html" class="hub-card">
             <h2>🧠 Dashboard</h2>
             <p>Módulos e automações</p>
+            <small>KuroSpeak IA • GhostWriter</small>
         </a>
-
         <a href="equipe.html" class="hub-card">
             <h2>👥 Equipe</h2>
             <p>Painel operacional</p>
+            <small>Suas tarefas designadas</small>
         </a>
-
         <a href="admin.html" class="hub-card">
             <h2>👑 Admin Gold</h2>
             <p>Controle administrativo</p>
+            <small>Gerenciar equipe e tarefas</small>
         </a>
-
     </div>
-
 </div>
-
 </body>
 </html>
