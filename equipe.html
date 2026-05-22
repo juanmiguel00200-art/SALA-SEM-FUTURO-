@@ -1,276 +1,254 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sala sem Futuro OS - Painel do Operador</title>
-    <style>
-        :root {
-            --bg: #09090d;
-            --card: #111118;
-            --border: rgba(212, 175, 55, 0.12);
-            --primary: #d4af37;
-            --secondary: #f3e5ab;
-            --gold-glow: rgba(212, 175, 55, 0.35);
-            --text: #ffffff;
-            --muted: #9fa0a6;
-            --red: #e74c3c;
-            --orange: #ff9f43;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sala sem Futuro OS - Painel da Equipe</title>
+<style>
+:root {
+    --bg: #09090d;
+    --card: #111118;
+    --border: rgba(212, 175, 55, 0.12);
+    --primary: #d4af37;
+    --secondary: #f3e5ab;
+    --gold-glow: rgba(212, 175, 55, 0.35);
+    --text: #ffffff;
+    --muted: #9fa0a6;
+    --red: #e74c3c;
+    --orange: #ff9f43;
+    --green: #00ff88;
+}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 
-        body {
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 24px;
-            position: relative;
-        }
+body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px;
+    position: relative;
+}
 
-        body::before {
-            content: ''; position: fixed; inset: 0;
-            background: url('https://i.postimg.cc/gky5YNH2/1778823817951-3.jpg') center/cover no-repeat;
-            opacity: .02; z-index: -2;
-        }
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url('https://i.postimg.cc/gky5YNH2/1778823817951-3.jpg') center/cover no-repeat;
+    opacity: .02;
+    z-index: -2;
+}
 
-        body::after {
-            content: ''; position: fixed; inset: 0;
-            background: linear-gradient(to bottom, rgba(5,5,8,0.85), rgba(5,5,8,0.98));
-            z-index: -1;
-        }
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(5,5,8,0.85), rgba(5,5,8,0.98));
+    z-index: -1;
+}
 
-        .container { max-width: 600px; margin: 0 auto; }
+.container { max-width: 600px; margin: 0 auto; }
 
-        /* Login da Equipe */
-        .login-gate {
-            max-width: 400px; margin: 100px auto 0;
-            background: var(--card); border: 1px solid var(--border);
-            padding: 30px; border-radius: 24px; box-shadow: 0 12px 32px rgba(0,0,0,0.6);
-        }
+.equipe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
 
-        /* Header */
-        .admin-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
-        }
-        .admin-header h1 { font-size: 1.8rem; font-weight: 800; }
-        .admin-header h1 span { 
-            background: linear-gradient(135deg, #ffe066, #d4af37);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+.equipe-header h1 { font-size: 1.8rem; font-weight: 800; }
+.equipe-header h1 span { 
+    background: linear-gradient(135deg, #ffe066, #d4af37);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-        .user-badge {
-            background: rgba(212, 175, 55, 0.1); border: 1px solid var(--primary);
-            color: var(--secondary); padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 0.85rem;
-        }
+.user-badge {
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid var(--primary);
+    color: var(--secondary);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
 
-        /* Cards de Tarefa */
-        .panel-box {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 24px; padding: 24px; box-shadow: 0 12px 32px rgba(0,0,0,0.6);
-        }
-        .panel-box h3 {
-            font-size: 1.1rem; font-weight: 800; margin-bottom: 20px;
-            color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px;
-        }
+.panel-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+}
 
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
-        .form-group input {
-            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.15); background: rgba(0,0,0,.5); color: white; outline: none;
-        }
+.panel-box h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 
-        .btn-gold {
-            width: 100%; padding: 14px; border: none; border-radius: 12px; font-weight: 800; font-size: 0.95rem;
-            background: linear-gradient(135deg, #f3e5ab, #d4af37); color: #111; cursor: pointer; transition: 0.3s;
-        }
-        .btn-gold:hover { box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3); }
+.task-board { display: flex; flex-direction: column; gap: 14px; }
+.task-card {
+    background: rgba(0,0,0,0.4);
+    border-left: 4px solid var(--primary);
+    padding: 18px;
+    border-radius: 0 16px 16px 0;
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+.task-card.high { border-left-color: var(--red); }
+.task-card.review { border-left-color: var(--orange); background: rgba(255, 159, 67, 0.02); }
+.task-card.done { border-left-color: #333; opacity: 0.4; }
 
-        .task-board { display: flex; flex-direction: column; gap: 14px; }
-        .task-card {
-            background: rgba(0,0,0,0.4); border-left: 4px solid var(--primary); padding: 18px; border-radius: 0 16px 16px 0;
-            border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-        .task-card.high { border-left-color: var(--red); }
-        .task-card.review { border-left-color: var(--orange); background: rgba(255, 159, 67, 0.02); }
-        .task-card.done { border-left-color: #333; opacity: 0.4; }
+.task-header { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+.task-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 6px; }
+.task-desc { font-size: 0.85rem; color: #b9bbbe; line-height: 1.4; margin-bottom: 14px; }
+.task-footer { display: flex; justify-content: space-between; align-items: center; }
 
-        .task-header { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
-        .task-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 6px; }
-        .task-desc { font-size: 0.85rem; color: #b9bbbe; line-height: 1.4; margin-bottom: 14px; }
-        
-        .badge-status { 
-            font-size: 0.75rem; font-weight: 800; cursor: pointer; background: rgba(255,255,255,0.02); 
-            border: 1px solid rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 8px; transition: 0.2s;
-        }
-        .badge-status:hover:not(:disabled) { background: rgba(212, 175, 55, 0.1); border-color: var(--primary); }
-        .badge-status:disabled { cursor: not-allowed; opacity: 0.7; }
+.badge-status {
+    font-size: 0.75rem;
+    font-weight: 800;
+    cursor: pointer;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+.badge-status:hover:not(:disabled) { background: rgba(212, 175, 55, 0.1); border-color: var(--primary); }
+.badge-status:disabled { cursor: not-allowed; opacity: 0.7; }
 
-        /* Área de Trabalho */
-        .work-space { display: none; }
-        .work-space.active { display: block; }
-    </style>
+.btn-back {
+    background: rgba(212, 175, 55, 0.05);
+    border: 1px solid var(--border);
+    color: var(--primary);
+    padding: 8px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: 0.3s;
+}
+.btn-back:hover { color: white; border-color: var(--primary); box-shadow: 0 0 12px var(--gold-glow); }
+</style>
 </head>
 <body>
 
-    <!-- PORTÃO DE ENTRADA: LOGIN DA EQUIPE -->
-    <div class="login-gate" id="loginGate">
-        <h2 style="margin-bottom: 20px; font-weight: 800; text-align: center; color: var(--secondary);">OPERATIONAL <span>AUTH</span></h2>
-        <div class="form-group">
-            <label>Usuário Operator</label>
-            <input type="text" id="userOp" placeholder="Seu nome cadastrado">
+<div class="container">
+    <header class="equipe-header">
+        <div>
+            <h1>Painel de <span>Tarefas</span></h1>
         </div>
-        <div class="form-group">
-            <label>Senha de Acesso</label>
-            <input type="password" id="passOp" placeholder="Sua senha pessoal">
+        <div>
+            <span class="user-badge" id="nomeLogado">CARREGANDO...</span>
+            <a href="dashboard.html" class="btn-back" style="margin-left: 12px;">← Dashboard</a>
         </div>
-        <button class="btn-gold" onclick="autenticarOperador()">Inicializar Terminal</button>
-    </div>
+    </header>
 
-    <!-- PAINEL DE TAREFAS RECEBIDAS -->
-    <div class="container work-space" id="workSpace">
-        <!-- HEADER -->
-        <header class="admin-header">
-            <div>
-                <h1>Painel de <span>Tarefas</span></h1>
-            </div>
-            <span class="user-badge" id="nomeLogado">OPERADOR</span>
-        </header>
-
-        <div class="panel-box">
-            <h3>📥 Suas Diretrizes Designadas</h3>
-            <div class="task-board" id="quadroOperador">
-                <!-- As tarefas certas serão injetadas aqui baseado em quem logar -->
-            </div>
+    <div class="panel-box">
+        <h3>📥 Suas Diretrizes Designadas</h3>
+        <div class="task-board" id="quadroOperador">
+            <div style="text-align:center; color:#8e8ea0;">Carregando tarefas...</div>
         </div>
     </div>
+</div>
 
-    <script>
-        // BANCO DE DADOS LOCAL DA EQUIPE (Para validação de login na página)
-        const EQUIPE_REGISTRADA = [
-            { usuario: "Kuro", senha: "kuro123" },
-            { usuario: "Vini_Dev", senha: "vini123" }
-        ];
+<script>
+const userRA = localStorage.getItem('sala_sem_futuro_ra');
+if (!userRA) {
+    window.location.href = 'login.html';
+}
 
-        // TAREFAS SIMULADAS NA TELA
-        const TODAS_AS_TAREFAS = [
-            { id: "102", resp: "Kuro", prioridade: "high", titulo: "Monitorar queda do banco de dados", desc: "Alguns RAs estão demorando para validar no login. Verificar logs locais.", status: "⚡ EM PROGRESSO", cor: "#ffcc00" },
-            { id: "104", resp: "Kuro", prioridade: "normal", titulo: "Refatorar CSS do Botão de Login", desc: "Ajustar padding para telas menores de celulares antigos.", status: "🔵 EM FILA", cor: "#61b5ff" },
-            { id: "101", resp: "Vini_Dev", prioridade: "normal", titulo: "Atualizar imagens dos planos VIP", desc: "Trocar a URL antiga do PostImage pelas novas fotos.", status: "🔵 EM FILA", cor: "#61b5ff" }
-        ];
+document.getElementById('nomeLogado').innerText = `👤 ${userRA.slice(0,15)}`;
 
-        let operadorAtual = "";
+function carregarTarefasDoOperador() {
+    const quadro = document.getElementById('quadroOperador');
+    const tarefas = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
+    
+    // Filtrar tarefas atribuídas ao operador atual
+    const tarefasFiltradas = tarefas.filter(t => t.responsavel === userRA || t.responsavel === userRA.split('@')[0]);
+    
+    if (tarefasFiltradas.length === 0) {
+        quadro.innerHTML = `<p style="color: var(--muted); text-align: center; font-size: 0.9rem;">Nenhuma tarefa pendente para o seu setor.</p>`;
+        return;
+    }
 
-        function autenticarOperador() {
-            const usuarioDigitado = document.getElementById('userOp').value;
-            const senhaDigitada = document.getElementById('passOp').value;
+    quadro.innerHTML = '';
+    tarefasFiltradas.forEach(tarefa => {
+        const card = document.createElement('div');
+        card.className = tarefa.prioridade === 'high' ? 'task-card high' : 'task-card';
+        if (tarefa.status === 'aguardando_revisao') card.classList.add('review');
+        if (tarefa.status === 'concluida') card.classList.add('done');
+        
+        let statusText = '🔵 EM FILA';
+        let statusColor = '#61b5ff';
+        if (tarefa.status === 'em_progresso') { statusText = '⚡ EM PROGRESSO'; statusColor = '#ffcc00'; }
+        if (tarefa.status === 'aguardando_revisao') { statusText = '⏳ AGUARDANDO REVISÃO'; statusColor = '#ff9f43'; }
+        if (tarefa.status === 'concluida') { statusText = '🏆 CONCLUÍDO'; statusColor = '#d4af37'; }
+        
+        card.innerHTML = `
+            <div class="task-header">
+                <span>ID: #${tarefa.id}</span>
+                <span style="color: ${tarefa.prioridade === 'high' ? 'var(--red)' : 'var(--muted)'};">
+                    ${tarefa.prioridade === 'high' ? 'CRÍTICO' : 'REGULAR'}
+                </span>
+            </div>
+            <div class="task-title">${tarefa.titulo}</div>
+            <div class="task-desc">${tarefa.descricao}</div>
+            <div class="task-footer">
+                <span style="font-size:0.7rem; color:#666;">Criado por: ${tarefa.criador || 'Admin'}</span>
+                <button class="badge-status" style="color: ${statusColor};" onclick="avancarStatus(this, '${tarefa.id}')" ${tarefa.status === 'concluida' ? 'disabled' : ''}>${statusText}</button>
+            </div>
+        `;
+        quadro.appendChild(card);
+    });
+}
 
-            const contaValida = EQUIPE_REGISTRADA.find(membro => membro.usuario === usuarioDigitado && membro.senha === senhaDigitada);
+async function avancarStatus(botao, tarefaId) {
+    const tarefas = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
+    const tarefaIndex = tarefas.findIndex(t => t.id == tarefaId);
+    
+    if (tarefaIndex === -1) return;
+    
+    if (botao.innerText === "🔵 EM FILA") {
+        tarefas[tarefaIndex].status = 'em_progresso';
+        botao.innerText = "⚡ EM PROGRESSO";
+        botao.style.color = "#ffcc00";
+    } 
+    else if (botao.innerText === "⚡ EM PROGRESSO") {
+        if (!confirm("Deseja enviar esta tarefa para a aprovação do Admin?")) return;
+        
+        tarefas[tarefaIndex].status = 'aguardando_revisao';
+        botao.innerText = "⏳ AGUARDANDO REVISÃO";
+        botao.style.color = "#ff9f43";
+        botao.disabled = true;
+        
+        // Notificar Admin (via localStorage)
+        localStorage.setItem('sala_sem_futuro_notificacao', JSON.stringify({
+            tipo: 'tarefa_aguardando',
+            tarefaId: tarefaId,
+            tarefaTitulo: tarefas[tarefaIndex].titulo,
+            operador: userRA,
+            timestamp: new Date().toISOString()
+        }));
+        
+        botao.closest('.task-card').classList.add('review');
+    }
+    
+    localStorage.setItem('sala_sem_futuro_tarefas', JSON.stringify(tarefas));
+    carregarTarefasDoOperador();
+}
 
-            if (contaValida) {
-                operadorAtual = contaValida.usuario;
-                document.getElementById('loginGate').style.display = 'none';
-                document.getElementById('nomeLogado').innerText = `👤 ${operadorAtual}`;
-                document.getElementById('workSpace').classList.add('active');
-                
-                carregarTarefasDoOperador();
-            } else {
-                alert("Acesso negado. Usuário ou senha operacional incorretos.");
-            }
-        }
-
-        function carregarTarefasDoOperador() {
-            const quadro = document.getElementById('quadroOperador');
-            quadro.innerHTML = ""; 
-
-            const tarefasFiltradas = TODAS_AS_TAREFAS.filter(t => t.resp === operadorAtual);
-
-            if (tarefasFiltradas.length === 0) {
-                quadro.innerHTML = `<p style="color: var(--muted); text-align: center; font-size: 0.9rem;">Nenhuma tarefa pendente para o seu setor.</p>`;
-                return;
-            }
-
-            tarefasFiltradas.forEach(tarefa => {
-                const card = document.createElement('div');
-                card.className = tarefa.prioridade === 'high' ? 'task-card high' : 'task-card';
-                card.id = `card-${tarefa.id}`;
-                card.innerHTML = `
-                    <div class="task-header">
-                        <span>ID: #${tarefa.id}</span>
-                        <span style="color: ${tarefa.prioridade === 'high' ? 'var(--red)' : 'var(--muted)'};">
-                            ${tarefa.prioridade === 'high' ? 'CRÍTICO' : 'REGULAR'}
-                        </span>
-                    </div>
-                    <div class="task-title">${tarefa.titulo}</div>
-                    <div class="task-desc">${tarefa.desc}</div>
-                    <div style="text-align: right;">
-                        <button class="badge-status" style="color: ${tarefa.cor};" onclick="avancarStatusOp(this, '${tarefa.id}')">${tarefa.status}</button>
-                    </div>
-                `;
-                quadro.appendChild(card);
-            });
-        }
-
-        // NOVO FLUXO: ENVIAR REQUISIÇÃO AO SERVIDOR RESTRITO
-        async function avancarStatusOp(botao, tarefaId) {
-            if (botao.innerText === "🔵 EM FILA") {
-                // Mudar para "Em Progresso" ainda é local e livre para o dev avisar que começou
-                botao.innerText = "⚡ EM PROGRESSO";
-                botao.style.color = "#ffcc00";
-            } 
-            else if (botao.innerText === "⚡ EM PROGRESSO") {
-                
-                if (!confirm("Deseja enviar esta tarefa para a aprovação do Proprietário?")) return;
-
-                // Visual de Carregamento no Botão
-                botao.innerText = "🔄 ENVIANDO REQUISIÇÃO...";
-                botao.style.color = "var(--muted)";
-                botao.disabled = true;
-
-                try {
-                    /* 
-                       CONEXÃO COM SEU BACK-END:
-                       Substitua a URL abaixo pela rota real do seu servidor (Node.js, PHP, Python, etc.)
-                       Exemplo: https://suaapi.com/tarefas/requisitar-conclusao
-                    */
-                    const resposta = await fetch('https://suaapi.com/tarefas/requisitar-conclusao', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${btoa(operadorAtual)}` // Passa quem está enviando
-                        },
-                        body: JSON.stringify({
-                            id_tarefa: tarefaId,
-                            operador: operadorAtual,
-                            solicitado_em: new Date().toISOString()
-                        })
-                    });
-
-                    // Nota: Como a URL acima é fictícia para o teste, o catch vai rodar. 
-                    // Para testar o visual agora, deixei a mudança acontecer mesmo se falhar (Simulação local)
-                    exibirAguardandoRevisao(botao, tarefaId);
-
-                } catch (error) {
-                    console.log("Servidor offline ou URL fictícia. Aplicando simulação visual de envio...");
-                    // Remova a linha abaixo quando colocar o seu link de API real para funcionar de verdade
-                    exibirAguardandoRevisao(botao, tarefaId);
-                }
-            }
-        }
-
-        // Altera o layout do Card deixando claro que está travado esperando você
-        function exibirAguardandoRevisao(botao, tarefaId) {
-            botao.innerText = "⏳ AGUARDANDO REVISÃO";
-            botao.style.color = "var(--orange)";
-            botao.disabled = true; // O dev não consegue mais clicar nem alterar
-
-            const card = document.getElementById(`card-${tarefaId}`);
-            if (card) {
-                card.classList.add('review'); // Borda fica laranja de aviso
-            }
-        }
-    </script>
+// Atualizar a cada 5 segundos
+carregarTarefasDoOperador();
+setInterval(carregarTarefasDoOperador, 5000);
+</script>
 </body>
 </html>
