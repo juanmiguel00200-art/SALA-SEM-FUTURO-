@@ -8,14 +8,16 @@
 :root {
     --bg: #07070a;
     --card: #0f0f16;
-    --border: rgba(255,255,255,.08);
+    --border: rgba(212,175,55,.12);
+    --primary: #d4af37;
+    --primary-dark: #aa7c11;
+    --primary-light: #f3e5ab;
     --green: #00ff88;
-    --yellow: #ffd000;
     --amber: #f5a623;
     --amber-glow: rgba(245,166,35,.35);
     --red: #e74c3c;
-    --gradient-normal: linear-gradient(135deg, #8b5cf6, #d946ef);
-    --gradient-gold: linear-gradient(135deg, #ff2d55, #ff6b00, #ffd700);
+    --gradient-gold: linear-gradient(135deg, #f3e5ab, #d4af37, #aa7c11);
+    --gradient-dark: linear-gradient(135deg, #aa7c11, #5a3e00);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -54,7 +56,13 @@ body::after {
 
 .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; justify-content: space-between; }
 
-.user-info-title { font-size: 1rem; font-weight: 700; background: rgba(212,175,55,.1); padding: 6px 12px; border-radius: 20px; }
+.user-info-title { 
+    font-size: 1rem; font-weight: 700; 
+    background: rgba(212,175,55,.1); 
+    padding: 6px 12px; 
+    border-radius: 20px;
+    border: 1px solid rgba(212,175,55,.2);
+}
 
 .glass {
     background: #0f0f14;
@@ -90,7 +98,7 @@ body::after {
 }
 
 .status-dot.free { background: #00ff88; box-shadow: 0 0 8px rgba(0,255,136,.6); }
-.status-dot.beta { background: var(--gradient-gold); box-shadow: 0 0 10px rgba(255,120,0,.7); }
+.status-dot.beta { background: var(--gradient-gold); box-shadow: 0 0 10px rgba(212,175,55,.7); }
 
 .switch-container {
     display: flex;
@@ -102,7 +110,7 @@ body::after {
     border: 1px solid var(--border);
 }
 
-.switch-label { font-weight: bold; font-size: 0.85rem; color: #ffd000; }
+.switch-label { font-weight: bold; font-size: 0.85rem; color: var(--primary); }
 .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider {
@@ -140,8 +148,7 @@ input:checked + .slider:before { transform: translateX(24px); }
     border-radius: 24px;
 }
 
-.stat-card h2 { font-size: 2.2rem; margin-top: 8px; font-weight: 800; }
-#filaEsperaNum { color: #d946ef; transition: color 0.3s; }
+.stat-card h2 { font-size: 2.2rem; margin-top: 8px; font-weight: 800; color: var(--primary); }
 
 .grid { display: flex; flex-direction: column; gap: 20px; }
 
@@ -171,7 +178,8 @@ input:checked + .slider:before { transform: translateX(24px); }
     font-size: .75rem;
 }
 .online { background: rgba(0,255,136,.12); color: #00ff88; }
-.beta { background: rgba(255,215,0,.12); color: #ffd700; }
+.beta { background: rgba(212,175,55,.12); color: var(--primary); }
+.ready { background: rgba(245,166,35,.12); color: var(--amber); }
 
 .btn {
     width: 100%;
@@ -183,9 +191,16 @@ input:checked + .slider:before { transform: translateX(24px); }
     cursor: pointer;
     text-align: center;
 }
-.btn-primary { background: var(--gradient-normal); color: white; box-shadow: 0 4px 12px rgba(168,85,247,.2); }
+.btn-primary { 
+    background: var(--gradient-gold); 
+    color: #080810; 
+    box-shadow: 0 4px 12px rgba(212,175,55,.3);
+    transition: all 0.3s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,.5); filter: brightness(1.05); }
 .btn-secondary { background: transparent; border: 1px solid var(--border); color: #d4d4e2; margin-top: 12px; }
-.btn-beta { background: var(--gradient-gold); color: white; font-weight: 800; margin-bottom: 15px; box-shadow: 0 4px 16px rgba(255,120,0,.3); }
+.btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+.btn-beta { background: var(--gradient-gold); color: #080810; font-weight: 800; margin-bottom: 15px; box-shadow: 0 4px 16px rgba(212,175,55,.4); }
 
 .bottom-nav {
     position: fixed;
@@ -210,8 +225,10 @@ input:checked + .slider:before { transform: translateX(24px); }
     font-weight: 700;
     font-size: 0.95rem;
     cursor: pointer;
+    transition: all 0.2s;
 }
-.nav-btn.active { color: white; }
+.nav-btn:hover { color: var(--primary); }
+.nav-btn.active { color: var(--primary); }
 
 .modal {
     position: fixed;
@@ -247,15 +264,15 @@ input:checked + .slider:before { transform: translateX(24px); }
     border-radius: 999px;
     background: var(--gradient-gold);
     transition: width .08s linear;
-    box-shadow: 0 0 12px rgba(255,140,0,.4);
+    box-shadow: 0 0 12px rgba(212,175,55,.4);
 }
 
 .logs {
     background: #020202;
-    border: 1px solid rgba(0,255,120,.15);
+    border: 1px solid rgba(212,175,55,.15);
     font-family: monospace;
     font-size: .72rem;
-    color: #39ff14;
+    color: var(--primary-light);
     height: 140px;
     overflow-y: auto;
     padding: 14px;
@@ -270,10 +287,14 @@ input:checked + .slider:before { transform: translateX(24px); }
     width: 100%;
     padding: 16px;
     border-radius: 16px;
-    border: 1px solid rgba(255,255,255,.07);
+    border: 1px solid rgba(212,175,55,.15);
     background: rgba(0,0,0,.45);
     color: white;
     outline: none;
+}
+.input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 8px rgba(212,175,55,.3);
 }
 .input-group textarea { resize: vertical; }
 
@@ -294,11 +315,11 @@ input:checked + .slider:before { transform: translateX(24px); }
     cursor: pointer;
     transition: all .2s ease;
 }
-.level-card:hover { border-color: var(--amber); transform: translateY(-2px); }
+.level-card:hover { border-color: var(--primary); transform: translateY(-2px); }
 .level-card.locked { opacity: 0.5; cursor: not-allowed; }
-.level-card.active { border-color: var(--amber); background: rgba(245,166,35,.1); }
+.level-card.active { border-color: var(--primary); background: rgba(212,175,55,.1); }
 
-.lv-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; }
+.lv-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; color: var(--primary-light); }
 .lv-desc { font-size: 0.7rem; color: #8e8ea0; }
 
 .lessons-list { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
@@ -316,7 +337,7 @@ input:checked + .slider:before { transform: translateX(24px); }
 .lesson-row.error { border-color: var(--red); background: rgba(231,76,60,.04); }
 
 .lr-info { flex: 1; text-align: left; margin-left: 12px; }
-.lr-title { font-size: 0.85rem; font-weight: 600; }
+.lr-title { font-size: 0.85rem; font-weight: 600; color: var(--primary-light); }
 .lr-meta { font-size: 0.65rem; color: #8e8ea0; }
 
 .lr-status { font-size: 0.7rem; padding: 4px 8px; border-radius: 8px; }
@@ -332,22 +353,32 @@ input:checked + .slider:before { transform: translateX(24px); }
     background: transparent;
     color: white;
     cursor: pointer;
+    transition: all 0.2s;
 }
-.lr-btn:hover { background: var(--amber); border-color: var(--amber); color: #080810; }
+.lr-btn:hover { background: var(--primary); border-color: var(--primary); color: #080810; }
 
 .action-bar { display: flex; gap: 10px; margin: 15px 0; flex-wrap: wrap; justify-content: center; }
 
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.module-card, .stat-card, .status-panel { animation: fadeIn 0.4s ease-out; }
 
 .beta-mode .glass, .beta-mode .module-card, .beta-mode .stat-card, .beta-mode .status-panel, .beta-mode .modal-box {
-    border: 1px solid rgba(255,120,0,.35);
-    box-shadow: 0 0 15px rgba(255,80,0,.18);
+    border: 1px solid rgba(212,175,55,.35);
+    box-shadow: 0 0 15px rgba(212,175,55,.18);
 }
 body.beta-mode h1, body.beta-mode .module-title {
     background: var(--gradient-gold);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,.3); border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(212,175,55,.3); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(212,175,55,.5); }
 </style>
 </head>
 <body>
@@ -389,7 +420,7 @@ body.beta-mode h1, body.beta-mode .module-title {
                 <span class="badge online" id="kuroSpeakStatus">ONLINE</span>
             </div>
             <p class="module-desc">Sistema inteligente de automação de lições do SPEAK.</p>
-            <button class="btn btn-primary" onclick="abrirModalSpeak()">Injetar Módulo</button>
+            <button class="btn btn-primary" onclick="abrirModalSpeak()">🎯 Injetar Módulo</button>
         </div>
         <div class="module-card glass">
             <div class="module-top">
@@ -397,15 +428,16 @@ body.beta-mode h1, body.beta-mode .module-title {
                 <span class="badge beta">BETA</span>
             </div>
             <p class="module-desc">Sistema avançado de geração de conteúdo.</p>
-            <button class="btn btn-primary" onclick="abrirModalGhost()">Injetar Módulo</button>
+            <button class="btn btn-primary" onclick="abrirModalGhost()">✍️ Ativar GhostWriter</button>
         </div>
     </div>
 </div>
 
 <div class="bottom-nav">
-    <button class="nav-btn active">Home</button>
-    <button class="nav-btn" onclick="verMinhasTarefas()">Minhas Tarefas</button>
-    <button class="nav-btn" onclick="deslogarSistema()">Sair</button>
+    <button class="nav-btn active" onclick="scrollToTop()">🏠 Home</button>
+    <button class="nav-btn" onclick="verMinhasTarefas()">📋 Tarefas</button>
+    <button class="nav-btn" onclick="abrirConfiguracoes()">⚙️ Config</button>
+    <button class="nav-btn" onclick="deslogarSistema()">🚪 Sair</button>
 </div>
 
 <div class="modal" id="taskModal">
@@ -413,15 +445,12 @@ body.beta-mode h1, body.beta-mode .module-title {
 </div>
 
 <script>
-// ==================== INTEGRAÇÃO COM SISTEMA ====================
-// Verificar login
+// ==================== VERIFICAÇÃO DE LOGIN ====================
 const userRA = localStorage.getItem('sala_sem_futuro_ra');
-if (!userRA) {
-    window.location.href = 'login.html';
-}
-document.getElementById('userHeaderTitle').innerHTML = `${userRA.slice(0,10)}... | RA: ${userRA.slice(-6)}`;
+if (!userRA) { window.location.href = 'login.html'; }
+document.getElementById('userHeaderTitle').innerHTML = `👤 ${userRA.slice(0,12)}... | RA: ${userRA.slice(-6)}`;
 
-// ==================== SPEAK MODULE (Sala sem Futuro) ====================
+// ==================== BACKEND LUNAR ====================
 const STORAGE_KEY = 'sala_sem_futuro_tokens';
 const API_BASE = 'https://learn.crimsonzerohub.xyz';
 const COURSE_ID = '87e8ec1d-a478-4d39-badd-4ddb20494eaf';
@@ -433,15 +462,15 @@ let lessonState = {};
 let autoRunning = false;
 let speakModalOpen = false;
 
-// Carregar tokens salvos
+// ==================== FUNÇÕES DE TOKEN ====================
 function loadSavedTokens() {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
         try {
             currentTokens = JSON.parse(saved);
-            document.getElementById('kuroSpeakStatus').innerHTML = 'READY';
-            document.getElementById('kuroSpeakStatus').style.background = 'rgba(245,166,35,.12)';
-            document.getElementById('kuroSpeakStatus').style.color = '#f5a623';
+            const statusEl = document.getElementById('kuroSpeakStatus');
+            statusEl.innerHTML = '⚡ PRONTO';
+            statusEl.className = 'badge ready';
             return true;
         } catch(e) {}
     }
@@ -451,9 +480,9 @@ function loadSavedTokens() {
 function saveTokens(tokens) {
     currentTokens = tokens;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tokens));
-    document.getElementById('kuroSpeakStatus').innerHTML = 'READY';
-    document.getElementById('kuroSpeakStatus').style.background = 'rgba(245,166,35,.12)';
-    document.getElementById('kuroSpeakStatus').style.color = '#f5a623';
+    const statusEl = document.getElementById('kuroSpeakStatus');
+    statusEl.innerHTML = '⚡ PRONTO';
+    statusEl.className = 'badge ready';
 }
 
 function extractAccess() {
@@ -469,6 +498,7 @@ function extractAccount() {
     if (typeof efid === 'object') return efid.account || '';
     try { return JSON.parse(efid).account || ''; } catch { return ''; }
 }
+// ==================== API DO LUNAR ====================
 async function apiPost(endpoint, body) {
     const r = await fetch(`${API_BASE}${endpoint}`, {
         method: 'POST',
@@ -528,7 +558,7 @@ async function runLesson(nodeId, updateProgress) {
     if (updateProgress) updateProgress(nodeId);
 
     try {
-        addLog(`[${nodeId.slice(0,8)}] Abrindo lição...`, 'amber');
+        addLog(`🎯 [${nodeId.slice(0,8)}] Abrindo lição...`, 'amber');
         const opened = await openLesson(nodeId);
         const lessonId = opened.lessonId;
         const lastVersion = opened.lastVersion || 0;
@@ -537,7 +567,7 @@ async function runLesson(nodeId, updateProgress) {
         const events = history.events || [];
         const sessionId = resp.state?.sessionId || resp.sessionId || '';
 
-        addLog(`[${nodeId.slice(0,8)}] ${events.length} eventos | version=${lastVersion}`, 'info');
+        addLog(`📊 [${nodeId.slice(0,8)}] ${events.length} eventos | v${lastVersion}`, 'info');
 
         lessonState[nodeId] = { status: 'running', lessonId, lastVersion, sessionId, events };
         if (updateProgress) updateProgress(nodeId);
@@ -546,25 +576,26 @@ async function runLesson(nodeId, updateProgress) {
         let newVersion = lastVersion;
 
         if (hasActivities) {
-            addLog(`[${nodeId.slice(0,8)}] Completando atividades...`, 'amber');
+            addLog(`⚡ [${nodeId.slice(0,8)}] Processando...`, 'amber');
             const ac = await autoCompleteLesson(lessonId, lastVersion, sessionId, events);
             newVersion = ac.new_last_version || lastVersion;
-            addLog(`[${nodeId.slice(0,8)}] ${ac.commands_sent} comandos enviados`, 'green');
+            addLog(`✅ [${nodeId.slice(0,8)}] ${ac.commands_sent} comandos`, 'green');
         } else {
-            addLog(`[${nodeId.slice(0,8)}] Sem atividades`, 'info');
+            addLog(`📝 [${nodeId.slice(0,8)}] Sem atividades`, 'info');
         }
 
         await completeLesson(lessonId, nodeId, newVersion, null);
-        addLog(`[${nodeId.slice(0,8)}] ✅ Concluída!`, 'green');
+        addLog(`🎉 [${nodeId.slice(0,8)}] Concluída!`, 'green');
 
         lessonState[nodeId] = { status: 'done', lessonId };
         if (updateProgress) updateProgress(nodeId);
 
         const doneCount = Object.values(lessonState).filter(s => s.status === 'done').length;
-        document.getElementById('execucoesAtivas').innerText = doneCount;
+        const totalCount = Object.keys(lessonState).length;
+        document.getElementById('execucoesAtivas').innerText = `${doneCount}/${totalCount}`;
 
     } catch(e) {
-        addLog(`[${nodeId.slice(0,8)}] ❌ Erro: ${e.message}`, 'red');
+        addLog(`❌ [${nodeId.slice(0,8)}] Erro: ${e.message}`, 'red');
         lessonState[nodeId] = { status: 'error', error: e.message };
         if (updateProgress) updateProgress(nodeId);
     }
@@ -575,33 +606,36 @@ function addLog(msg, type = 'info') {
     if (!logsDiv) return;
     const line = document.createElement('div');
     const time = new Date().toLocaleTimeString('pt-BR');
-    const colors = { green: '#00ff88', amber: '#f5a623', red: '#e74c3c', info: '#8b5cf6' };
+    const colors = { green: '#00ff88', amber: '#f5a623', red: '#e74c3c', info: '#d4af37' };
     line.innerHTML = `<span style="color:#666">[${time}]</span> <span style="color:${colors[type] || colors.info}">${msg}</span>`;
     logsDiv.appendChild(line);
     logsDiv.scrollTop = logsDiv.scrollHeight;
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+// ==================== MODAL SPEAK ====================
 function abrirModalSpeak() {
     if (speakModalOpen) return;
     speakModalOpen = true;
     
     const caixa = document.getElementById('modalContent');
     caixa.innerHTML = `
-        <h2 style="margin-bottom:20px;">🤖 KuroSpeak IA</h2>
+        <h2 style="margin-bottom:20px; color: var(--primary);">🤖 KuroSpeak IA</h2>
         
         <div style="background:rgba(0,0,0,.3); border-radius:16px; padding:15px; margin-bottom:20px;">
             <div class="input-group">
-                <label>🔑 Tokens (Base64)</label>
+                <label>🔑 Tokens SPEAK (Base64)</label>
                 <textarea id="tokenInput" placeholder="Cole o token Base64 aqui..." rows="2"></textarea>
+                <small style="color:#8e8ea0; font-size:0.65rem;">Obtenha o token pela extensão</small>
             </div>
-            <button class="btn btn-beta" onclick="validarTokens()" style="margin:0;">Validar Tokens</button>
+            <button class="btn btn-beta" onclick="validarTokens()" style="margin:0;">🔓 Validar Tokens</button>
             <div id="tokenStatus" style="margin-top:10px; font-size:0.8rem;"></div>
         </div>
         
         <div id="speakContent" style="display:none;">
             <div class="action-bar">
-                <button class="btn btn-primary" onclick="carregarNiveisSpeak()" style="width:auto; padding:10px 20px;">📚 Carregar Níveis</button>
+                <button class="btn btn-primary" onclick="carregarNiveisSpeak()" style="width:auto;">📚 Carregar Níveis</button>
+                <button class="btn btn-secondary" onclick="atualizarProgressoGeral()" style="width:auto;">🔄 Atualizar</button>
             </div>
             <div id="levelsGridSpeak"></div>
             <div id="lessonsPanelSpeak" style="display:none;">
@@ -614,15 +648,16 @@ function abrirModalSpeak() {
         </div>
         
         <div class="logs" id="speakLogs" style="margin-top:20px; height:120px;"></div>
-        
+        <small style="color:#666;">Backend Lunar • Auto-complete inteligente</small>
         <button class="btn btn-secondary" onclick="fecharModalSpeak()" style="margin-top:15px;">Fechar</button>
     `;
     
     document.getElementById('taskModal').style.display = 'flex';
     
     if (currentTokens) {
-        document.getElementById('tokenStatus').innerHTML = '<span style="color:#00ff88;">✓ Tokens já carregados</span>';
+        document.getElementById('tokenStatus').innerHTML = '<span style="color:#00ff88;">✓ Tokens carregados</span>';
         document.getElementById('speakContent').style.display = 'block';
+        carregarNiveisSpeak();
     }
 }
 
@@ -661,19 +696,19 @@ async function validarTokens() {
         }
         
         saveTokens(tokens);
-        statusDiv.innerHTML = '<span style="color:#00ff88;">✅ Tokens validados com sucesso!</span>';
+        statusDiv.innerHTML = '<span style="color:#00ff88;">✅ Tokens validados!</span>';
         document.getElementById('speakContent').style.display = 'block';
-        addLog('Tokens carregados e validados!', 'green');
+        addLog('Tokens carregados!', 'green');
+        carregarNiveisSpeak();
         
     } catch(e) {
         statusDiv.innerHTML = `<span style="color:#e74c3c;">❌ Erro: ${e.message}</span>`;
-        addLog(`Erro ao validar tokens: ${e.message}`, 'red');
+        addLog(`Erro: ${e.message}`, 'red');
     }
 }
-
 async function carregarNiveisSpeak() {
     if (!currentTokens) {
-        addLog('Nenhum token carregado. Cole os tokens primeiro!', 'red');
+        addLog('Cole os tokens primeiro!', 'red');
         return;
     }
     
@@ -686,7 +721,7 @@ async function carregarNiveisSpeak() {
         currentLevels = levels;
         
         if (!levels.length) {
-            levelsDiv.innerHTML = '<div style="text-align:center; color:#e74c3c;">Nenhum nível encontrado</div>';
+            levelsDiv.innerHTML = '<div style="text-align:center; color:#e74c3c;">Nenhum nível</div>';
             return;
         }
         
@@ -710,7 +745,7 @@ async function carregarNiveisSpeak() {
 }
 
 async function selectLevelSpeak(lv) {
-    addLog(`Carregando lições do nível: ${lv.title}`, 'amber');
+    addLog(`📖 Carregando lições: ${lv.title}`, 'amber');
     
     const levelsDiv = document.getElementById('levelsGridSpeak');
     const lessonsPanel = document.getElementById('lessonsPanelSpeak');
@@ -718,7 +753,7 @@ async function selectLevelSpeak(lv) {
     
     levelsDiv.style.display = 'none';
     lessonsPanel.style.display = 'block';
-    lessonsList.innerHTML = '<div style="text-align:center; color:#8e8ea0;">⏳ Carregando lições...</div>';
+    lessonsList.innerHTML = '<div style="text-align:center; color:#8e8ea0;">⏳ Carregando...</div>';
     
     try {
         const lessons = await loadLevelDetail(lv.id);
@@ -738,14 +773,14 @@ async function selectLevelSpeak(lv) {
                     <div class="lr-title">${title}</div>
                     <div class="lr-meta">${meta}</div>
                 </div>
-                <div class="lr-status idle" id="speak-st-${node.id}">aguardando</div>
-                <button class="lr-btn" onclick="runSingleLesson('${node.id}')">Iniciar</button>
+                <div class="lr-status idle" id="speak-st-${node.id}">⏳ aguardando</div>
+                <button class="lr-btn" onclick="runSingleLesson('${node.id}')">▶ Iniciar</button>
             `;
             lessonsList.appendChild(row);
         }
         
         addLog(`${lessons.length} lições carregadas`, 'green');
-        document.getElementById('execucoesAtivas').innerText = '0';
+        document.getElementById('execucoesAtivas').innerText = `0/${lessons.length}`;
         
     } catch(e) {
         lessonsList.innerHTML = `<div style="text-align:center; color:#e74c3c;">Erro: ${e.message}</div>`;
@@ -768,16 +803,16 @@ function updateLessonRow(nodeId) {
     
     if (st.status === 'running') {
         row?.classList.add('running');
-        if (stEl) { stEl.className = 'lr-status running'; stEl.textContent = '⏳ executando'; }
-        if (btn) btn.disabled = true;
+        if (stEl) { stEl.className = 'lr-status running'; stEl.innerHTML = '⚡ executando...'; }
+        if (btn) { btn.disabled = true; btn.innerHTML = '⏳'; }
     } else if (st.status === 'done') {
         row?.classList.add('done');
-        if (stEl) { stEl.className = 'lr-status done'; stEl.textContent = '✅ feito'; }
-        if (btn) { btn.disabled = true; btn.textContent = '✓'; }
+        if (stEl) { stEl.className = 'lr-status done'; stEl.innerHTML = '✅ concluído'; }
+        if (btn) { btn.disabled = true; btn.innerHTML = '✓'; }
     } else if (st.status === 'error') {
         row?.classList.add('error');
-        if (stEl) { stEl.className = 'lr-status error'; stEl.textContent = '⚠️ erro'; }
-        if (btn) { btn.disabled = false; btn.textContent = 'Retry'; }
+        if (stEl) { stEl.className = 'lr-status error'; stEl.innerHTML = '⚠️ erro'; }
+        if (btn) { btn.disabled = false; btn.innerHTML = '⟳ Tentar'; }
     }
 }
 
@@ -794,25 +829,43 @@ async function autoCompleteAllLessons() {
         return !s || s === 'error';
     });
     
-    addLog(`Auto-complete: ${pending.length} lições pendentes`, 'info');
+    if (pending.length === 0) {
+        addLog('Todas concluídas!', 'green');
+        autoRunning = false;
+        return;
+    }
+    
+    addLog(`🚀 Iniciando: ${pending.length} lições`, 'info');
     
     for (let i = 0; i < pending.length; i++) {
         const node = pending[i];
-        addLog(`--- Lição ${i+1}/${pending.length}`, 'amber');
+        addLog(`📌 Lição ${i+1}/${pending.length}`, 'amber');
         await runLesson(node.id, updateLessonRow);
-        if (i < pending.length - 1) await sleep(1200);
+        if (i < pending.length - 1) await sleep(1500);
     }
     
     autoRunning = false;
-    addLog('=== Auto-complete finalizado ===', 'green');
+    addLog('🎉 Auto-complete finalizado!', 'green');
 }
+
+function atualizarProgressoGeral() {
+    if (!currentLessons.length) {
+        addLog('Selecione um nível primeiro.', 'info');
+        return;
+    }
+    const done = Object.values(lessonState).filter(s => s.status === 'done').length;
+    const total = currentLessons.length;
+    addLog(`📊 Progresso: ${done}/${total} concluídas`, 'info');
+    document.getElementById('execucoesAtivas').innerText = `${done}/${total}`;
+}
+// ==================== FUNÇÕES DO SISTEMA ====================
 function abrirModalGhost() {
     const caixa = document.getElementById('modalContent');
     caixa.innerHTML = `
-        <h2 style="margin-bottom:20px;">✍️ GhostWriter Pro</h2>
+        <h2 style="margin-bottom:20px; color: var(--primary);">✍️ GhostWriter Pro</h2>
         <div style="background:rgba(0,0,0,.3); border-radius:16px; padding:20px; text-align:center;">
-            <p style="color:#ffd700; margin-bottom:15px;">⚡ Módulo em Desenvolvimento</p>
-            <p style="color:#8e8ea0; font-size:0.9rem;">Disponível em breve para usuários Beta.</p>
+            <p style="color:#ffd700;">⚡ Módulo em Desenvolvimento</p>
+            <p style="color:#8e8ea0;">Em breve: geração automática de respostas.</p>
         </div>
         <button class="btn btn-secondary" onclick="fecharModalSpeak()" style="margin-top:20px;">Fechar</button>
     `;
@@ -826,31 +879,57 @@ function verMinhasTarefas() {
     const caixa = document.getElementById('modalContent');
     if (minhasTarefas.length === 0) {
         caixa.innerHTML = `
-            <h2 style="margin-bottom:20px;">📋 Minhas Tarefas</h2>
-            <p style="color:#8e8ea0;">Nenhuma tarefa atribuída a você no momento.</p>
-            <button class="btn btn-secondary" onclick="fecharModalSpeak()" style="margin-top:20px;">Fechar</button>
+            <h2 style="color: var(--primary);">📋 Minhas Tarefas</h2>
+            <p style="color:#8e8ea0;">Nenhuma tarefa atribuída.</p>
+            <button class="btn btn-secondary" onclick="fecharModalSpeak()">Fechar</button>
         `;
     } else {
-        let html = `<h2 style="margin-bottom:20px;">📋 Minhas Tarefas (${minhasTarefas.length})</h2>`;
+        let html = `<h2 style="color: var(--primary);">📋 Minhas Tarefas (${minhasTarefas.length})</h2>`;
         minhasTarefas.forEach(t => {
             let statusText = '🔵 EM FILA';
-            if (t.status === 'em_progresso') statusText = '⚡ EM PROGRESSO';
-            if (t.status === 'aguardando_revisao') statusText = '⏳ AGUARDANDO REVISÃO';
-            if (t.status === 'concluida') statusText = '🏆 CONCLUÍDO';
+            let statusColor = '#61b5ff';
+            if (t.status === 'em_progresso') { statusText = '⚡ EM PROGRESSO'; statusColor = '#ffcc00'; }
+            if (t.status === 'aguardando_revisao') { statusText = '⏳ AGUARDANDO REVISÃO'; statusColor = '#ff9f43'; }
+            if (t.status === 'concluida') { statusText = '🏆 CONCLUÍDO'; statusColor = '#d4af37'; }
             
             html += `
-                <div style="background:rgba(0,0,0,.3); border-left:4px solid ${t.prioridade === 'high' ? '#e74c3c' : '#d4af37'}; padding:15px; margin-bottom:10px; border-radius:8px; text-align:left;">
+                <div style="background:rgba(0,0,0,.3); border-left:4px solid ${t.prioridade === 'high' ? '#e74c3c' : '#d4af37'}; padding:15px; margin-bottom:10px; text-align:left;">
                     <div style="font-weight:700;">${t.titulo}</div>
-                    <div style="font-size:0.75rem; color:#8e8ea0; margin-top:5px;">${t.descricao}</div>
-                    <div style="font-size:0.7rem; color:#d4af37; margin-top:8px;">Status: ${statusText}</div>
+                    <div style="font-size:0.75rem; color:#8e8ea0;">${t.descricao}</div>
+                    <div style="margin-top:10px;"><span style="color:${statusColor};">${statusText}</span></div>
                 </div>
             `;
         });
-        html += `<button class="btn btn-secondary" onclick="fecharModalSpeak()" style="margin-top:20px;">Fechar</button>`;
+        html += `<button class="btn btn-secondary" onclick="fecharModalSpeak()">Fechar</button>`;
         caixa.innerHTML = html;
     }
     document.getElementById('taskModal').style.display = 'flex';
 }
+
+function abrirConfiguracoes() {
+    const caixa = document.getElementById('modalContent');
+    caixa.innerHTML = `
+        <h2 style="color: var(--primary);">⚙️ Configurações</h2>
+        <div class="input-group"><label>API Base</label><input type="text" id="apiBaseInput" value="${API_BASE}"></div>
+        <div class="input-group"><label>Course ID</label><input type="text" id="courseIdInput" value="${COURSE_ID}"></div>
+        <button class="btn btn-primary" onclick="salvarConfiguracoes()">💾 Salvar</button>
+        <div style="margin-top:15px; padding:10px; background:rgba(0,0,0,.3); border-radius:12px;">
+            <p style="font-size:0.7rem;">RA: ${userRA}</p>
+            <p style="font-size:0.7rem;">Tokens: ${currentTokens ? '✅' : '❌'}</p>
+        </div>
+        <button class="btn btn-secondary" onclick="fecharModalSpeak()" style="margin-top:15px;">Fechar</button>
+    `;
+    document.getElementById('taskModal').style.display = 'flex';
+}
+
+function salvarConfiguracoes() {
+    const novaApi = document.getElementById('apiBaseInput').value;
+    if (novaApi) localStorage.setItem('sala_sem_futuro_api_base', novaApi);
+    addLog('Configurações salvas!', 'green');
+    fecharModalSpeak();
+}
+
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
 function ativarBeta() {
     document.body.classList.toggle('beta-mode');
@@ -858,18 +937,16 @@ function ativarBeta() {
     const texto = document.getElementById('switchTexto');
     
     if(document.body.classList.contains('beta-mode')){
-        status.className = 'beta-status';
         status.innerHTML = `<span class="status-dot beta"></span>ON BETA`;
         texto.innerText = 'BETA';
     } else {
-        status.className = 'free-status';
         status.innerHTML = `<span class="status-dot free"></span>ON FREE`;
         texto.innerText = 'FREE';
     }
 }
 
 function deslogarSistema() {
-    if (confirm('Deseja realmente sair?')) {
+    if (confirm('Deseja sair?')) {
         localStorage.removeItem('sala_sem_futuro_logged');
         window.location.href = 'login.html';
     }
@@ -882,7 +959,7 @@ function atualizarTarefasPendentes() {
     document.getElementById('tarefasPendentes').innerText = pendentes.length;
 }
 
-// Inicialização
+// ==================== INICIALIZAÇÃO ====================
 loadSavedTokens();
 atualizarTarefasPendentes();
 setInterval(atualizarTarefasPendentes, 5000);
