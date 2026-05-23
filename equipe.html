@@ -48,12 +48,7 @@ body::after {
 
 .container { max-width: 600px; margin: 0 auto; }
 
-/* Login */
-.login-container {
-    max-width: 400px;
-    margin: 80px auto 0;
-}
-
+.login-container { max-width: 400px; margin: 80px auto 0; }
 .login-box {
     background: var(--card);
     border: 1px solid var(--border);
@@ -61,12 +56,7 @@ body::after {
     padding: 32px;
     text-align: center;
 }
-
-.login-box h2 {
-    color: var(--primary);
-    margin-bottom: 24px;
-}
-
+.login-box h2 { color: var(--primary); margin-bottom: 24px; }
 .login-box input {
     width: 100%;
     padding: 14px;
@@ -78,20 +68,17 @@ body::after {
     outline: none;
 }
 .login-box input:focus { border-color: var(--primary); }
-
 .btn-login {
     width: 100%;
     padding: 14px;
-    background: var(--gradient-gold, linear-gradient(135deg, #f3e5ab, #d4af37));
+    background: linear-gradient(135deg, #f3e5ab, #d4af37);
     border: none;
     border-radius: 12px;
     font-weight: 800;
     cursor: pointer;
-    margin-top: 10px;
 }
 .btn-login:hover { filter: brightness(1.05); }
 
-/* Painel Principal (oculto inicialmente) */
 .painel-principal { display: none; }
 
 .equipe-header {
@@ -104,13 +91,8 @@ body::after {
     flex-wrap: wrap;
     gap: 15px;
 }
-
 .equipe-header h1 { font-size: 1.8rem; font-weight: 800; }
-.equipe-header h1 span { 
-    background: linear-gradient(135deg, #ffe066, #d4af37);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+.equipe-header h1 span { background: linear-gradient(135deg, #ffe066, #d4af37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
 .user-badge {
     background: rgba(212, 175, 55, 0.1);
@@ -129,14 +111,12 @@ body::after {
     padding: 24px;
     box-shadow: 0 12px 32px rgba(0,0,0,0.6);
 }
-
 .panel-box h3 {
     font-size: 1.1rem;
     font-weight: 800;
     margin-bottom: 20px;
     color: var(--secondary);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 .task-board { display: flex; flex-direction: column; gap: 14px; max-height: 500px; overflow-y: auto; }
@@ -148,10 +128,9 @@ body::after {
     border-top: 1px solid var(--border);
     border-right: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
-    transition: all 0.3s ease;
 }
 .task-card.high { border-left-color: var(--red); }
-.task-card.review { border-left-color: var(--orange); background: rgba(255, 159, 67, 0.02); }
+.task-card.review { border-left-color: var(--orange); background: rgba(255,159,67,0.02); }
 .task-card.done { border-left-color: #333; opacity: 0.4; }
 
 .task-header { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
@@ -167,9 +146,8 @@ body::after {
     border: 1px solid rgba(255,255,255,0.08);
     padding: 6px 12px;
     border-radius: 8px;
-    transition: 0.2s;
 }
-.badge-status:hover:not(:disabled) { background: rgba(212, 175, 55, 0.1); border-color: var(--primary); }
+.badge-status:hover:not(:disabled) { background: rgba(212,175,55,0.1); border-color: var(--primary); }
 .badge-status:disabled { cursor: not-allowed; opacity: 0.7; }
 
 .btn-back {
@@ -182,11 +160,9 @@ body::after {
     font-weight: 700;
     text-decoration: none;
     font-size: 0.85rem;
-    transition: 0.3s;
 }
 .btn-back:hover { color: white; border-color: var(--primary); box-shadow: 0 0 12px var(--gold-glow); }
 
-/* Modal de troca de senha */
 .modal {
     position: fixed;
     inset: 0;
@@ -219,18 +195,16 @@ body::after {
 </head>
 <body>
 
-<!-- TELA DE LOGIN -->
 <div id="loginScreen" class="container login-container">
     <div class="login-box">
         <h2>🔐 Acesso da Equipe</h2>
-        <input type="text" id="loginRa" placeholder="Digite seu RA">
+        <input type="text" id="loginChave" placeholder="Sua Chave de Identificação (ex: @joao)">
         <input type="password" id="loginSenha" placeholder="Sua senha">
         <button class="btn-login" onclick="fazerLogin()">Entrar</button>
-        <p style="color: #666; font-size: 0.7rem; margin-top: 20px;">Use as credenciais fornecidas pelo Admin</p>
+        <p style="color: #666; font-size: 0.7rem; margin-top: 20px;">Use a chave e senha fornecidas pelo Admin</p>
     </div>
 </div>
 
-<!-- MODAL DE TROCA DE SENHA -->
 <div id="modalTrocaSenha" class="modal">
     <div class="modal-box">
         <h3 style="color: var(--primary);">🔒 Trocar Senha</h3>
@@ -241,26 +215,19 @@ body::after {
     </div>
 </div>
 
-<!-- PAINEL PRINCIPAL -->
 <div id="painelPrincipal" class="container painel-principal">
     <header class="equipe-header">
-        <div>
-            <h1>Painel de <span>Tarefas</span></h1>
-        </div>
+        <div><h1>Painel de <span>Tarefas</span></h1></div>
         <div>
             <span class="user-badge" id="nomeLogado">CARREGANDO...</span>
             <button class="btn-back" onclick="logout()" style="margin-left: 12px;">🚪 Sair</button>
             <a href="dashboard.html" class="btn-back" style="margin-left: 8px;">← Dashboard</a>
         </div>
     </header>
-
     <div class="panel-box">
         <h3>📥 Minhas Tarefas</h3>
-        <div class="task-board" id="quadroOperador">
-            <div style="text-align:center; color:#8e8ea0;">Carregando tarefas...</div>
-        </div>
+        <div class="task-board" id="quadroOperador"><div style="text-align:center; color:#8e8ea0;">Carregando tarefas...</div></div>
     </div>
-    
     <div class="panel-box" style="margin-top: 20px;">
         <h3>ℹ️ Minhas Informações</h3>
         <div id="infoUsuario" style="color: #8e8ea0; font-size: 0.85rem;"></div>
@@ -271,52 +238,27 @@ body::after {
 let usuarioLogado = null;
 let equipe = [];
 
-function carregarEquipe() {
-    equipe = JSON.parse(localStorage.getItem('sala_sem_futuro_equipe') || '[]');
-}
+function carregarEquipe() { equipe = JSON.parse(localStorage.getItem('sala_sem_futuro_equipe') || '[]'); }
 
 function fazerLogin() {
-    const ra = document.getElementById('loginRa').value.trim();
+    const chave = document.getElementById('loginChave').value.trim();
     const senha = document.getElementById('loginSenha').value;
-    
     carregarEquipe();
-    const usuario = equipe.find(m => m.ra === ra);
-    
-    if (!usuario) {
-        alert('RA não encontrado!');
-        return;
-    }
-    
-    if (usuario.senha !== senha) {
-        alert('Senha incorreta!');
-        return;
-    }
-    
+    const usuario = equipe.find(m => m.chave === chave);
+    if (!usuario) { alert('Chave não encontrada!'); return; }
+    if (usuario.senha !== senha) { alert('Senha incorreta!'); return; }
     usuarioLogado = usuario;
-    localStorage.setItem('sala_sem_futuro_equipe_logged', JSON.stringify({ ra: usuario.ra, nome: usuario.nome }));
-    
-    if (usuario.senhaTemporaria) {
-        document.getElementById('modalTrocaSenha').style.display = 'flex';
-    } else {
-        entrarNoPainel();
-    }
+    localStorage.setItem('sala_sem_futuro_equipe_logged', JSON.stringify({ chave: usuario.chave, nome: usuario.nome }));
+    if (usuario.senhaTemporaria) { document.getElementById('modalTrocaSenha').style.display = 'flex'; }
+    else { entrarNoPainel(); }
 }
 
 function trocarSenha() {
     const novaSenha = document.getElementById('novaSenha').value;
     const confirmar = document.getElementById('confirmarSenha').value;
-    
-    if (novaSenha.length < 4) {
-        alert('A senha deve ter no mínimo 4 caracteres!');
-        return;
-    }
-    
-    if (novaSenha !== confirmar) {
-        alert('As senhas não coincidem!');
-        return;
-    }
-    
-    const index = equipe.findIndex(m => m.ra === usuarioLogado.ra);
+    if (novaSenha.length < 4) { alert('A senha deve ter no mínimo 4 caracteres!'); return; }
+    if (novaSenha !== confirmar) { alert('As senhas não coincidem!'); return; }
+    const index = equipe.findIndex(m => m.chave === usuarioLogado.chave);
     if (index !== -1) {
         equipe[index].senha = novaSenha;
         equipe[index].senhaTemporaria = false;
@@ -324,7 +266,6 @@ function trocarSenha() {
         usuarioLogado.senha = novaSenha;
         usuarioLogado.senhaTemporaria = false;
     }
-    
     document.getElementById('modalTrocaSenha').style.display = 'none';
     entrarNoPainel();
 }
@@ -332,10 +273,10 @@ function trocarSenha() {
 function entrarNoPainel() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('painelPrincipal').style.display = 'block';
-    document.getElementById('nomeLogado').innerText = `👤 ${usuarioLogado.nome} | ${usuarioLogado.cargo}`;
+    document.getElementById('nomeLogado').innerHTML = `👤 ${usuarioLogado.nome} | ${usuarioLogado.cargo}`;
     document.getElementById('infoUsuario').innerHTML = `
         <p><strong>Nome:</strong> ${usuarioLogado.nome}</p>
-        <p><strong>RA:</strong> ${usuarioLogado.ra}</p>
+        <p><strong>Chave:</strong> ${usuarioLogado.chave}</p>
         <p><strong>Cargo:</strong> ${usuarioLogado.cargo}</p>
         <p><strong>Entrou em:</strong> ${new Date(usuarioLogado.dataCriacao).toLocaleDateString()}</p>
     `;
@@ -345,41 +286,29 @@ function entrarNoPainel() {
 
 function carregarTarefasDoOperador() {
     if (!usuarioLogado) return;
-    
     const quadro = document.getElementById('quadroOperador');
     const tarefas = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
-    
-    const minhasTarefas = tarefas.filter(t => t.responsavel === usuarioLogado.ra);
-    
+    const minhasTarefas = tarefas.filter(t => t.responsavel === usuarioLogado.chave);
     if (minhasTarefas.length === 0) {
-        quadro.innerHTML = `<p style="color: var(--muted); text-align: center; font-size: 0.9rem;">Nenhuma tarefa atribuída para você no momento.</p>`;
+        quadro.innerHTML = '<p style="color: var(--muted); text-align: center;">Nenhuma tarefa atribuída.</p>';
         return;
     }
-
     quadro.innerHTML = '';
     minhasTarefas.forEach(tarefa => {
         const card = document.createElement('div');
         card.className = tarefa.prioridade === 'high' ? 'task-card high' : 'task-card';
         if (tarefa.status === 'aguardando_revisao') card.classList.add('review');
         if (tarefa.status === 'concluida') card.classList.add('done');
-        
-        let statusText = '🔵 EM FILA';
-        let statusColor = '#61b5ff';
+        let statusText = '🔵 EM FILA', statusColor = '#61b5ff';
         if (tarefa.status === 'em_progresso') { statusText = '⚡ EM PROGRESSO'; statusColor = '#ffcc00'; }
         if (tarefa.status === 'aguardando_revisao') { statusText = '⏳ AGUARDANDO REVISÃO'; statusColor = '#ff9f43'; }
         if (tarefa.status === 'concluida') { statusText = '🏆 CONCLUÍDO'; statusColor = '#d4af37'; }
-        
         card.innerHTML = `
-            <div class="task-header">
-                <span>ID: #${tarefa.id}</span>
-                <span style="color: ${tarefa.prioridade === 'high' ? 'var(--red)' : 'var(--muted)'};">
-                    ${tarefa.prioridade === 'high' ? '⚠️ CRÍTICO' : '📌 REGULAR'}
-                </span>
-            </div>
+            <div class="task-header"><span>ID: #${tarefa.id}</span><span>${tarefa.prioridade === 'high' ? '⚠️ CRÍTICO' : '📌 REGULAR'}</span></div>
             <div class="task-title">${tarefa.titulo}</div>
             <div class="task-desc">${tarefa.descricao}</div>
             <div class="task-footer">
-                <span style="font-size:0.7rem; color:#666;">Criado por: ${tarefa.criador || 'Admin'} • ${new Date(tarefa.data_criacao).toLocaleDateString()}</span>
+                <span style="font-size:0.7rem;">Criado por: ${tarefa.criador} • ${new Date(tarefa.data_criacao).toLocaleDateString()}</span>
                 <button class="badge-status" style="color: ${statusColor};" onclick="avancarStatus(this, '${tarefa.id}')" ${tarefa.status === 'concluida' ? 'disabled' : ''}>${statusText}</button>
             </div>
         `;
@@ -390,22 +319,17 @@ function carregarTarefasDoOperador() {
 async function avancarStatus(botao, tarefaId) {
     const tarefas = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
     const tarefaIndex = tarefas.findIndex(t => t.id == tarefaId);
-    
     if (tarefaIndex === -1) return;
-    
     if (botao.innerText === "🔵 EM FILA") {
         tarefas[tarefaIndex].status = 'em_progresso';
         botao.innerText = "⚡ EM PROGRESSO";
         botao.style.color = "#ffcc00";
-    } 
-    else if (botao.innerText === "⚡ EM PROGRESSO") {
-        if (!confirm("Deseja enviar esta tarefa para a aprovação do Admin?")) return;
-        
+    } else if (botao.innerText === "⚡ EM PROGRESSO") {
+        if (!confirm("Deseja enviar esta tarefa para aprovação do Admin?")) return;
         tarefas[tarefaIndex].status = 'aguardando_revisao';
         botao.innerText = "⏳ AGUARDANDO REVISÃO";
         botao.style.color = "#ff9f43";
         botao.disabled = true;
-        
         localStorage.setItem('sala_sem_futuro_notificacao', JSON.stringify({
             tipo: 'tarefa_aguardando',
             tarefaId: tarefaId,
@@ -413,10 +337,8 @@ async function avancarStatus(botao, tarefaId) {
             operador: usuarioLogado.nome,
             timestamp: new Date().toISOString()
         }));
-        
         botao.closest('.task-card').classList.add('review');
     }
-    
     localStorage.setItem('sala_sem_futuro_tarefas', JSON.stringify(tarefas));
     carregarTarefasDoOperador();
 }
@@ -426,19 +348,16 @@ function logout() {
     usuarioLogado = null;
     document.getElementById('painelPrincipal').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'block';
-    document.getElementById('loginRa').value = '';
+    document.getElementById('loginChave').value = '';
     document.getElementById('loginSenha').value = '';
 }
 
-// Verificar se já está logado
 const loggedData = localStorage.getItem('sala_sem_futuro_equipe_logged');
 if (loggedData) {
     const data = JSON.parse(loggedData);
     carregarEquipe();
-    usuarioLogado = equipe.find(m => m.ra === data.ra);
-    if (usuarioLogado) {
-        entrarNoPainel();
-    }
+    usuarioLogado = equipe.find(m => m.chave === data.chave);
+    if (usuarioLogado) entrarNoPainel();
 }
 </script>
 </body>
