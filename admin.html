@@ -47,7 +47,7 @@ body::after {
     z-index: -1;
 }
 
-.container { max-width: 1300px; margin: 0 auto; }
+.container { max-width: 1400px; margin: 0 auto; }
 
 .admin-header {
     display: flex;
@@ -56,6 +56,8 @@ body::after {
     margin-bottom: 32px;
     padding-bottom: 16px;
     border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 .admin-header h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
@@ -81,12 +83,15 @@ body::after {
 
 .admin-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
     margin-bottom: 24px;
 }
 
-@media (max-width: 968px) {
+@media (max-width: 1200px) {
+    .admin-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
     .admin-grid { grid-template-columns: 1fr; }
 }
 
@@ -145,8 +150,8 @@ body::after {
 }
 .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4); filter: brightness(1.1); }
 
-.team-list { display: flex; flex-direction: column; gap: 12px; max-height: 280px; overflow-y: auto; }
-.team-member {
+.team-list, .tarefas-alunos-list { display: flex; flex-direction: column; gap: 12px; max-height: 350px; overflow-y: auto; }
+.team-member, .aluno-tarefa-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -156,8 +161,8 @@ body::after {
     border-radius: 16px;
 }
 .member-info h4 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.member-info p { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
-.btn-remove {
+.member-info p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+.btn-remove, .btn-distribuir {
     background: rgba(231,76,60,0.1);
     border: 1px solid rgba(231,76,60,0.2);
     color: #e74c3c;
@@ -166,8 +171,14 @@ body::after {
     cursor: pointer;
     font-size: 0.7rem;
 }
+.btn-distribuir {
+    background: rgba(46,204,113,0.1);
+    border-color: rgba(46,204,113,0.2);
+    color: #2ecc71;
+}
+.btn-distribuir:hover { background: rgba(46,204,113,0.2); }
 
-.task-board { display: flex; flex-direction: column; gap: 12px; max-height: 480px; overflow-y: auto; }
+.task-board { display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto; }
 .task-card {
     background: rgba(0,0,0,0.4);
     border-left: 4px solid var(--primary);
@@ -182,13 +193,13 @@ body::after {
 .task-card.done { border-left-color: #333; opacity: 0.4; }
 
 .task-header { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
-.task-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; color: #fff; }
-.task-desc { font-size: 0.85rem; color: #b9bbbe; line-height: 1.4; margin-bottom: 10px; }
-.task-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-.task-user { font-size: 0.8rem; background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.1); padding: 4px 10px; border-radius: 999px; font-weight: 600; color: var(--secondary); }
+.task-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; color: #fff; }
+.task-desc { font-size: 0.8rem; color: #b9bbbe; line-height: 1.4; margin-bottom: 10px; }
+.task-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 8px; }
+.task-user { font-size: 0.75rem; background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.1); padding: 4px 10px; border-radius: 999px; font-weight: 600; color: var(--secondary); }
 
 .badge-status {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 800;
     cursor: pointer;
     background: rgba(255,255,255,0.02);
@@ -230,9 +241,70 @@ body::after {
     border-radius: 10px;
 }
 
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+}
+.tab-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: 700;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+.tab-btn.active {
+    background: rgba(212,175,55,0.1);
+    color: var(--primary);
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.15); border-radius: 999px; }
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 9999;
+}
+.modal-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 28px;
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+}
+.modal-box input {
+    width: 100%;
+    padding: 14px;
+    margin: 10px 0;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(0,0,0,.5);
+    color: white;
+}
+.credential-display {
+    background: rgba(0,0,0,.5);
+    padding: 15px;
+    border-radius: 12px;
+    margin: 15px 0;
+    text-align: left;
+}
+.credential-display p { margin: 8px 0; font-family: monospace; }
 </style>
 </head>
 <body>
@@ -247,92 +319,131 @@ body::after {
                 🔔
                 <span class="notification-badge" id="notifCount">0</span>
             </div>
+            <span class="user-badge" style="padding: 8px 16px;">👑 Admin Gold</span>
             <a href="dashboard.html" class="btn-back">← Dashboard</a>
         </div>
     </header>
 
-    <div class="admin-grid">
-        <div class="panel-box">
-            <h3>👑 Staff Especializada</h3>
-            <div class="team-list" id="listaEquipe">
-                <div style="text-align:center; color:#8e8ea0;">Carregando equipe...</div>
-            </div>
-        </div>
+    <!-- TABS -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="mudarTab('equipe')">👥 Equipe</button>
+        <button class="tab-btn" onclick="mudarTab('tarefas')">📋 Tarefas da Equipe</button>
+        <button class="tab-btn" onclick="mudarTab('alunos')">🎓 Tarefas dos Alunos</button>
+    </div>
 
-        <div class="panel-box">
-            <h3>✨ Adicionar Membro / Definir RA</h3>
-            <form id="formMembro" onsubmit="adicionarMembro(event)">
-                <div class="form-group">
-                    <label>Nome / RA do Membro</label>
-                    <input type="text" id="nomeMembro" placeholder="Ex: usuario_ra ou nome" required>
+    <!-- TAB EQUIPE -->
+    <div id="tabEquipe" class="tab-content active">
+        <div class="admin-grid">
+            <div class="panel-box">
+                <h3>👑 Staff Especializada</h3>
+                <div class="team-list" id="listaEquipe"></div>
+            </div>
+            <div class="panel-box">
+                <h3>✨ Adicionar Membro da Equipe</h3>
+                <form id="formMembro" onsubmit="adicionarMembro(event)">
+                    <div class="form-group">
+                        <label>Nome do Membro</label>
+                        <input type="text" id="nomeMembro" placeholder="Ex: João Silva" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cargo / Função</label>
+                        <select id="cargoMembro">
+                            <option value="OPERADOR">Operador</option>
+                            <option value="MODERADOR">Moderador</option>
+                            <option value="SUPORTE">Suporte Técnico</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>RA (Login do usuário)</label>
+                        <input type="text" id="raMembro" placeholder="Digite o RA do membro" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Criar Membro e Gerar Credenciais</button>
+                </form>
+            </div>
+            <div class="panel-box">
+                <h3>📊 Resumo da Equipe</h3>
+                <div id="resumoEquipe">
+                    <p style="color: var(--muted);">Carregando...</p>
                 </div>
-                <div class="form-group">
-                    <label>Cargo / Função</label>
-                    <select id="cargoMembro">
-                        <option value="OPERADOR">Operador</option>
-                        <option value="MODERADOR">Moderador</option>
-                        <option value="SUPORTE">Suporte</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>RA do Membro (para login)</label>
-                    <input type="text" id="raMembro" placeholder="Digite o RA para vincular ao login">
-                </div>
-                <button type="submit" class="btn-submit">Vincular Membro</button>
-            </form>
+            </div>
         </div>
     </div>
 
-    <div class="admin-grid">
-        <div class="panel-box">
-            <h3>🔱 Despachar Ordem de Serviço</h3>
-            <form id="formTarefa" onsubmit="criarTarefa(event)">
-                <div class="form-group">
-                    <label>Título do Objetivo</label>
-                    <input type="text" id="tituloTarefa" placeholder="Ex: Corrigir Bypass do CMSP" required>
-                </div>
-                <div class="form-group">
-                    <label>Descrição do que deve ser feito</label>
-                    <textarea id="descTarefa" placeholder="Descreva os detalhes operacionais..." required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Direcionar para quem? (RA ou nome)</label>
-                    <select id="responsavelTarefa">
-                        <option value="">Selecione um membro</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Prioridade de Execução</label>
-                    <select id="prioridadeTarefa">
-                        <option value="normal">Normal (Dourada)</option>
-                        <option value="high">ALERTA CRÍTICO (Vermelha)</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn-submit">Disparar Diretriz para o Time</button>
-            </form>
+    <!-- TAB TAREFAS DA EQUIPE -->
+    <div id="tabTarefas" class="tab-content">
+        <div class="admin-grid">
+            <div class="panel-box">
+                <h3>🔱 Despachar Ordem de Serviço</h3>
+                <form id="formTarefa" onsubmit="criarTarefa(event)">
+                    <div class="form-group">
+                        <label>Título do Objetivo</label>
+                        <input type="text" id="tituloTarefa" placeholder="Ex: Corrigir Bypass do CMSP" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição detalhada</label>
+                        <textarea id="descTarefa" placeholder="Descreva os detalhes operacionais..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Direcionar para quem?</label>
+                        <select id="responsavelTarefa"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Prioridade</label>
+                        <select id="prioridadeTarefa">
+                            <option value="normal">Normal (Dourada)</option>
+                            <option value="high">CRÍTICO (Vermelha)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-submit">Disparar Diretriz</button>
+                </form>
+            </div>
+            <div class="panel-box">
+                <h3>📊 Tarefas em Andamento</h3>
+                <div class="task-board" id="quadroTarefas"></div>
+            </div>
         </div>
+    </div>
 
-        <div class="panel-box">
-            <h3>📊 Fluxo Operacional Ativo</h3>
-            <div class="task-board" id="quadroTarefas">
-                <div style="text-align:center; color:#8e8ea0;">Carregando tarefas...</div>
+    <!-- TAB TAREFAS DOS ALUNOS -->
+    <div id="tabAlunos" class="tab-content">
+        <div class="admin-grid">
+            <div class="panel-box">
+                <h3>📥 Solicitações dos Alunos</h3>
+                <div class="tarefas-alunos-list" id="tarefasAlunosList"></div>
+            </div>
+            <div class="panel-box">
+                <h3>📤 Distribuir para Equipe</h3>
+                <div id="areaDistribuicao">
+                    <p style="color: var(--muted);">Selecione uma tarefa de aluno para distribuir.</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal" id="credModal">
+    <div class="modal-box">
+        <h3 style="color: var(--primary);">🎉 Credenciais Geradas!</h3>
+        <div class="credential-display" id="credDisplay"></div>
+        <p style="color: #8e8ea0; font-size: 0.8rem;">⚠️ Salve estas credenciais. O membro deverá trocar a senha no primeiro acesso.</p>
+        <button class="btn-submit" onclick="fecharModalCred()">Fechar</button>
+    </div>
+</div>
+
 <script>
+// ==================== DADOS GLOBAIS ====================
 const SENHA_MESTRE = "admin123";
 let equipe = [];
 let tarefas = [];
+let tarefasAlunos = [];
+let currentUser = "Admin Gold";
 
+// ==================== FUNÇÕES PRINCIPAIS ====================
 function carregarDados() {
     equipe = JSON.parse(localStorage.getItem('sala_sem_futuro_equipe') || '[]');
     if (equipe.length === 0) {
         equipe = [
-            { id: 1, nome: "Admin Gold", ra: "admin", cargo: "OWNER" },
-            { id: 2, nome: "Kuro", ra: "kuro123", cargo: "MODERADOR" },
-            { id: 3, nome: "Vini_Dev", ra: "vini123", cargo: "SUPORTE" }
+            { id: 1, nome: "Admin Gold", ra: "admin", cargo: "OWNER", senha: "admin123", senhaTemporaria: false, dataCriacao: new Date().toISOString() }
         ];
         localStorage.setItem('sala_sem_futuro_equipe', JSON.stringify(equipe));
     }
@@ -340,16 +451,82 @@ function carregarDados() {
     tarefas = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
     if (tarefas.length === 0) {
         tarefas = [
-            { id: 101, titulo: "Atualizar imagens dos planos VIP", descricao: "Trocar a URL antiga pelas novas fotos.", responsavel: "vini123", prioridade: "normal", status: "concluida", criador: "Admin", data_criacao: new Date().toISOString() },
-            { id: 102, titulo: "Monitorar queda do banco de dados", descricao: "Alguns RAs estão demorando para validar no login.", responsavel: "kuro123", prioridade: "high", status: "em_progresso", criador: "Admin", data_criacao: new Date().toISOString() }
+            { id: 101, titulo: "Configurar sistema de logs", descricao: "Implementar logging de todas as ações dos usuários.", responsavel: "admin", prioridade: "normal", status: "concluida", criador: "Admin", data_criacao: new Date().toISOString() }
         ];
         localStorage.setItem('sala_sem_futuro_tarefas', JSON.stringify(tarefas));
     }
     
+    tarefasAlunos = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas_alunos') || '[]');
+    if (tarefasAlunos.length === 0) {
+        tarefasAlunos = [
+            { id: 1, alunoRA: "1234567", titulo: "Erro ao fazer login", descricao: "Não consigo acessar minha conta após atualização.", status: "pendente", data: new Date().toISOString() },
+            { id: 2, alunoRA: "7654321", titulo: "Módulo não carrega", descricao: "O KuroSpeak IA não abre no meu dashboard.", status: "pendente", data: new Date().toISOString() }
+        ];
+        localStorage.setItem('sala_sem_futuro_tarefas_alunos', JSON.stringify(tarefasAlunos));
+    }
+    
     renderizarEquipe();
     renderizarTarefas();
+    renderizarTarefasAlunos();
     atualizarSelectResponsaveis();
     atualizarNotificacoes();
+    atualizarResumoEquipe();
+}
+
+function gerarSenhaTemporaria() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+    let senha = '';
+    for (let i = 0; i < 8; i++) {
+        senha += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return senha;
+}
+
+function fecharModalCred() {
+    document.getElementById('credModal').style.display = 'none';
+}
+</script>
+<script>
+function adicionarMembro(e) {
+    e.preventDefault();
+    const nome = document.getElementById('nomeMembro').value;
+    const cargo = document.getElementById('cargoMembro').value;
+    const ra = document.getElementById('raMembro').value;
+    
+    if (equipe.some(m => m.ra === ra)) {
+        alert('Este RA já está cadastrado na equipe!');
+        return;
+    }
+    
+    const senhaTemp = gerarSenhaTemporaria();
+    const novoId = equipe.length > 0 ? Math.max(...equipe.map(m => m.id)) + 1 : 2;
+    
+    equipe.push({
+        id: novoId,
+        nome: nome,
+        ra: ra,
+        cargo: cargo,
+        senha: senhaTemp,
+        senhaTemporaria: true,
+        dataCriacao: new Date().toISOString()
+    });
+    
+    localStorage.setItem('sala_sem_futuro_equipe', JSON.stringify(equipe));
+    
+    document.getElementById('credDisplay').innerHTML = `
+        <p><strong>📌 Credenciais de Acesso</strong></p>
+        <p>🔑 RA: <strong style="color: #d4af37;">${ra}</strong></p>
+        <p>🔒 Senha Temporária: <strong style="color: #d4af37;">${senhaTemp}</strong></p>
+        <hr style="border-color: #333; margin: 10px 0;">
+        <p style="font-size: 0.7rem;">⚠️ O membro deverá trocar a senha no primeiro acesso.</p>
+        <p style="font-size: 0.7rem;">🔗 Link de acesso: <strong>equipe.html</strong></p>
+    `;
+    document.getElementById('credModal').style.display = 'flex';
+    
+    document.getElementById('formMembro').reset();
+    renderizarEquipe();
+    atualizarSelectResponsaveis();
+    atualizarResumoEquipe();
 }
 
 function renderizarEquipe() {
@@ -360,8 +537,8 @@ function renderizarEquipe() {
         div.className = 'team-member';
         div.innerHTML = `
             <div class="member-info">
-                <h4><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#00ff88; margin-right:8px;"></span> ${membro.nome}</h4>
-                <p>RA: ${membro.ra} • ${membro.cargo}</p>
+                <h4><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${membro.senhaTemporaria ? '#ff9f43' : '#00ff88'}; margin-right:8px;"></span> ${membro.nome}</h4>
+                <p>RA: ${membro.ra} • ${membro.cargo} • ${membro.senhaTemporaria ? '⚠️ Senha temporária' : '✅ Senha definida'}</p>
             </div>
             ${membro.cargo !== 'OWNER' ? `<button class="btn-remove" onclick="removerMembro(${membro.id})">Remover</button>` : '<span style="color:#d4af37;">👑</span>'}
         `;
@@ -375,22 +552,24 @@ function removerMembro(id) {
         localStorage.setItem('sala_sem_futuro_equipe', JSON.stringify(equipe));
         renderizarEquipe();
         atualizarSelectResponsaveis();
+        atualizarResumoEquipe();
     }
 }
 
-function adicionarMembro(e) {
-    e.preventDefault();
-    const nome = document.getElementById('nomeMembro').value;
-    const cargo = document.getElementById('cargoMembro').value;
-    const ra = document.getElementById('raMembro').value;
-    
-    const novoId = equipe.length > 0 ? Math.max(...equipe.map(m => m.id)) + 1 : 4;
-    equipe.push({ id: novoId, nome: nome, ra: ra, cargo: cargo });
-    localStorage.setItem('sala_sem_futuro_equipe', JSON.stringify(equipe));
-    
-    document.getElementById('formMembro').reset();
-    renderizarEquipe();
-    atualizarSelectResponsaveis();
+function atualizarResumoEquipe() {
+    const total = equipe.length;
+    const ativos = equipe.filter(m => !m.senhaTemporaria).length;
+    const pendentes = equipe.filter(m => m.senhaTemporaria && m.cargo !== 'OWNER').length;
+    document.getElementById('resumoEquipe').innerHTML = `
+        <p style="color: var(--primary); font-size: 1.2rem;">${total}</p>
+        <p style="color: #8e8ea0;">Membros cadastrados</p>
+        <hr style="border-color: #333; margin: 10px 0;">
+        <p>✅ Ativos: ${ativos}</p>
+        <p>⚠️ Pendentes: ${pendentes}</p>
+        <hr style="border-color: #333; margin: 10px 0;">
+        <p>📋 Tarefas: ${tarefas.filter(t => t.status !== 'concluida').length} ativas</p>
+        <p>🎓 Alunos: ${tarefasAlunos.filter(t => t.status === 'pendente').length} solicitações</p>
+    `;
 }
 
 function atualizarSelectResponsaveis() {
@@ -400,12 +579,13 @@ function atualizarSelectResponsaveis() {
         if (membro.cargo !== 'OWNER') {
             const option = document.createElement('option');
             option.value = membro.ra;
-            option.innerText = `${membro.nome} (${membro.ra})`;
+            option.innerText = `${membro.nome} (${membro.ra}) - ${membro.cargo}`;
             select.appendChild(option);
         }
     });
 }
-
+</script>
+<script>
 function criarTarefa(e) {
     e.preventDefault();
     const titulo = document.getElementById('tituloTarefa').value;
@@ -435,30 +615,30 @@ function criarTarefa(e) {
     
     document.getElementById('formTarefa').reset();
     renderizarTarefas();
+    atualizarResumoEquipe();
 }
 
 function renderizarTarefas() {
     const quadro = document.getElementById('quadroTarefas');
     quadro.innerHTML = '';
     
-    if (tarefas.length === 0) {
-        quadro.innerHTML = '<div style="text-align:center; color:#8e8ea0;">Nenhuma tarefa cadastrada.</div>';
+    const tarefasAtivas = tarefas.filter(t => t.status !== 'concluida');
+    if (tarefasAtivas.length === 0) {
+        quadro.innerHTML = '<div style="text-align:center; color:#8e8ea0;">Nenhuma tarefa ativa.</div>';
         return;
     }
     
-    tarefas.forEach(tarefa => {
+    tarefasAtivas.forEach(tarefa => {
         const card = document.createElement('div');
         let classe = 'task-card';
         if (tarefa.prioridade === 'high') classe += ' high';
         if (tarefa.status === 'aguardando_revisao') classe += ' review';
-        if (tarefa.status === 'concluida') classe += ' done';
         card.className = classe;
         
         let statusText = '🔵 EM FILA';
         let statusColor = '#61b5ff';
         if (tarefa.status === 'em_progresso') { statusText = '⚡ EM PROGRESSO'; statusColor = '#ffcc00'; }
         if (tarefa.status === 'aguardando_revisao') { statusText = '⏳ AGUARDANDO REVISÃO'; statusColor = '#ff9f43'; }
-        if (tarefa.status === 'concluida') { statusText = '🏆 CONCLUÍDO'; statusColor = '#d4af37'; }
         
         const membro = equipe.find(m => m.ra === tarefa.responsavel);
         const nomeResponsavel = membro ? membro.nome : tarefa.responsavel;
@@ -467,21 +647,19 @@ function renderizarTarefas() {
             <div class="task-header">
                 <span>ID: #${tarefa.id}</span>
                 <span style="color: ${tarefa.prioridade === 'high' ? '#e74c3c' : '#8e8ea0'};">
-                    ${tarefa.prioridade === 'high' ? 'CRÍTICO' : 'REGULAR'}
+                    ${tarefa.prioridade === 'high' ? '⚠️ CRÍTICO' : '📌 REGULAR'}
                 </span>
             </div>
             <div class="task-title">${tarefa.titulo}</div>
             <div class="task-desc">${tarefa.descricao}</div>
             <div class="task-footer">
-                <span class="task-user">👤 Responsável: ${nomeResponsavel}</span>
-                <div>
-                    ${tarefa.status === 'aguardando_revisao' ? `
+                <span class="task-user">👤 ${nomeResponsavel}</span>
+                ${tarefa.status === 'aguardando_revisao' ? `
+                    <div>
                         <button class="badge-status badge-approve" onclick="aprovarTarefa(${tarefa.id})">✅ Aprovar</button>
                         <button class="badge-status badge-reject" onclick="rejeitarTarefa(${tarefa.id})">❌ Rejeitar</button>
-                    ` : `
-                        <span class="badge-status" style="color: ${statusColor};">${statusText}</span>
-                    `}
-                </div>
+                    </div>
+                ` : `<span class="badge-status" style="color: ${statusColor};">${statusText}</span>`}
             </div>
         `;
         quadro.appendChild(card);
@@ -496,6 +674,7 @@ function aprovarTarefa(id) {
             tarefas[index].status = 'concluida';
             localStorage.setItem('sala_sem_futuro_tarefas', JSON.stringify(tarefas));
             renderizarTarefas();
+            atualizarResumoEquipe();
             alert('✅ Tarefa aprovada e concluída!');
         }
     } else if (senha !== null) {
@@ -517,6 +696,98 @@ function rejeitarTarefa(id) {
         alert("Senha inválida!");
     }
 }
+</script>
+<script>
+function renderizarTarefasAlunos() {
+    const lista = document.getElementById('tarefasAlunosList');
+    lista.innerHTML = '';
+    
+    const pendentes = tarefasAlunos.filter(t => t.status === 'pendente');
+    if (pendentes.length === 0) {
+        lista.innerHTML = '<div style="text-align:center; color:#8e8ea0;">Nenhuma solicitação pendente.</div>';
+        return;
+    }
+    
+    pendentes.forEach(tarefa => {
+        const div = document.createElement('div');
+        div.className = 'aluno-tarefa-card';
+        div.innerHTML = `
+            <div class="member-info">
+                <h4>🎓 Aluno: ${tarefa.alunoRA}</h4>
+                <p><strong>${tarefa.titulo}</strong></p>
+                <p style="font-size:0.7rem;">${tarefa.descricao}</p>
+                <p style="font-size:0.65rem; color:#666;">${new Date(tarefa.data).toLocaleString()}</p>
+            </div>
+            <button class="btn-distribuir" onclick="abrirDistribuicao(${tarefa.id})">📤 Distribuir</button>
+        `;
+        lista.appendChild(div);
+    });
+}
+
+function abrirDistribuicao(tarefaId) {
+    const tarefa = tarefasAlunos.find(t => t.id === tarefaId);
+    if (!tarefa) return;
+    
+    let membrosOptions = '';
+    equipe.forEach(membro => {
+        if (membro.cargo !== 'OWNER') {
+            membrosOptions += `<option value="${membro.ra}">${membro.nome} (${membro.cargo})</option>`;
+        }
+    });
+    
+    document.getElementById('areaDistribuicao').innerHTML = `
+        <div style="background:rgba(0,0,0,.3); border-radius:16px; padding:20px;">
+            <h4 style="color: var(--primary);">Distribuir Tarefa</h4>
+            <p><strong>Aluno:</strong> ${tarefa.alunoRA}</p>
+            <p><strong>Título:</strong> ${tarefa.titulo}</p>
+            <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
+            <div class="form-group">
+                <label>Distribuir para:</label>
+                <select id="selectMembroDistribuir">${membrosOptions}</select>
+            </div>
+            <button class="btn-submit" onclick="confirmarDistribuicao(${tarefa.id})">✅ Confirmar Distribuição</button>
+            <button class="btn-secondary" style="margin-top:10px; background:transparent; border:1px solid var(--border); padding:10px; width:100%; border-radius:12px;" onclick="cancelarDistribuicao()">Cancelar</button>
+        </div>
+    `;
+}
+
+function cancelarDistribuicao() {
+    document.getElementById('areaDistribuicao').innerHTML = '<p style="color: var(--muted);">Selecione uma tarefa de aluno para distribuir.</p>';
+}
+
+function confirmarDistribuicao(tarefaId) {
+    const responsavel = document.getElementById('selectMembroDistribuir').value;
+    const membro = equipe.find(m => m.ra === responsavel);
+    const tarefaAluno = tarefasAlunos.find(t => t.id === tarefaId);
+    
+    if (!tarefaAluno) return;
+    
+    const novaTarefaEquipe = {
+        id: Date.now(),
+        titulo: `[ALUNO] ${tarefaAluno.titulo}`,
+        descricao: `${tarefaAluno.descricao}\n\n👤 Aluno responsável: ${tarefaAluno.alunoRA}`,
+        responsavel: responsavel,
+        prioridade: 'normal',
+        status: 'pendente',
+        criador: 'Admin',
+        data_criacao: new Date().toISOString()
+    };
+    
+    tarefas.unshift(novaTarefaEquipe);
+    localStorage.setItem('sala_sem_futuro_tarefas', JSON.stringify(tarefas));
+    
+    tarefaAluno.status = 'distribuida';
+    tarefaAluno.responsavel = responsavel;
+    tarefaAluno.dataDistribuicao = new Date().toISOString();
+    localStorage.setItem('sala_sem_futuro_tarefas_alunos', JSON.stringify(tarefasAlunos));
+    
+    renderizarTarefasAlunos();
+    renderizarTarefas();
+    atualizarResumoEquipe();
+    cancelarDistribuicao();
+    
+    alert(`✅ Tarefa distribuída para ${membro.nome}!`);
+}
 
 function atualizarNotificacoes() {
     const notificacoes = JSON.parse(localStorage.getItem('sala_sem_futuro_notificacao') || 'null');
@@ -536,12 +807,28 @@ function verNotificacoes() {
     }
 }
 
+function mudarTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    
+    if (tab === 'equipe') {
+        document.getElementById('tabEquipe').classList.add('active');
+        document.querySelector('.tabs button:first-child').classList.add('active');
+    } else if (tab === 'tarefas') {
+        document.getElementById('tabTarefas').classList.add('active');
+        document.querySelector('.tabs button:nth-child(2)').classList.add('active');
+    } else if (tab === 'alunos') {
+        document.getElementById('tabAlunos').classList.add('active');
+        document.querySelector('.tabs button:nth-child(3)').classList.add('active');
+    }
+}
+
 // Inicialização
 carregarDados();
 setInterval(() => {
     carregarDados();
     atualizarNotificacoes();
-}, 3000);
+}, 5000);
 </script>
 </body>
 </html>
