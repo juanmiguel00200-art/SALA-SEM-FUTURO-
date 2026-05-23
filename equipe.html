@@ -253,7 +253,6 @@ function entrarNoPainel() {
     carregarTarefasDoOperador();
     setInterval(carregarTarefasDoOperador, 5000);
 }
-
 function carregarTarefasDoOperador() {
     if (!usuarioLogado) return;
     const quadro = document.getElementById('quadroOperador');
@@ -293,7 +292,6 @@ function selecionarStatus(elemento, status) {
     document.querySelectorAll('.status-option').forEach(opt => opt.classList.remove('selected'));
     elemento.classList.add('selected');
 }
-
 function fecharModalRelatorio() { document.getElementById('modalRelatorio').style.display = 'none'; }
 
 function enviarRelatorio() {
@@ -316,7 +314,6 @@ function enviarRelatorio() {
     carregarTarefasDoOperador();
     alert('✅ Relatório entregue!');
 }
-
 function acessarDashboardAluno() {
     const alunoRA = document.getElementById('buscarAlunoRA').value.trim();
     if (!alunoRA) { alert('Digite o RA do aluno!'); return; }
@@ -331,7 +328,6 @@ function acessarDashboardAluno() {
     document.getElementById('alunoErros').innerHTML = `<p><strong>⚠️ Erros:</strong></p>` + (alunoData.erros || []).map(e => `<div class="erro-item"><strong>[${e.tipo}]</strong> ${e.mensagem}<br><small style="color:#666;">${e.data}</small></div>`).join('');
     document.getElementById('alunoProgresso').innerHTML = `<p><strong>📈 Detalhamento:</strong></p><div style="background:#222; border-radius:10px; height:8px; margin:10px 0;"><div style="width:${alunoData.progresso}; height:8px; background:linear-gradient(90deg,#d4af37,#f3e5ab); border-radius:10px;"></div></div><p>✅ Concluídas: 12/27</p><p>⏳ Em andamento: 3</p><p>🔒 Bloqueadas: 12</p>`;
 }
-
 function logout() {
     localStorage.removeItem('sala_sem_futuro_equipe_logged');
     usuarioLogado = null;
