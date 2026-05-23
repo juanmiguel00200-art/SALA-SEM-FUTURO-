@@ -3,967 +3,490 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sala sem Futuro OS - Dashboard</title>
+<title>Sala sem Futuro OS — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-    --bg: #07070a;
-    --card: #0f0f16;
-    --border: rgba(212,175,55,.12);
-    --primary: #d4af37;
-    --primary-dark: #aa7c11;
-    --primary-light: #f3e5ab;
-    --green: #00ff88;
-    --amber: #f5a623;
-    --amber-glow: rgba(245,166,35,.35);
-    --red: #e74c3c;
-    --gradient-gold: linear-gradient(135deg, #f3e5ab, #d4af37, #aa7c11);
-    --gradient-dark: linear-gradient(135deg, #aa7c11, #5a3e00);
+  --bg:#060608; --card:#0d0d12; --card2:#111118;
+  --border:rgba(212,175,55,.14); --gold:#d4af37;
+  --gold-light:#f3e5ab; --gold-dark:#8a6800;
+  --muted:#5a5a72; --text:#e8e8f0;
+  --green:#00ff88; --red:#ff4757; --blue:#3a9cf5; --amber:#f5a623;
+  --glow:rgba(212,175,55,.18);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Syne',sans-serif;
+  background:var(--bg); color:var(--text);
+  min-height:100vh; padding-bottom:100px;
+}
+.bg-grid{
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(212,175,55,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,175,55,.03) 1px,transparent 1px);
+  background-size:48px 48px; z-index:0; pointer-events:none;
+}
+.page{position:relative;z-index:1;max-width:500px;margin:0 auto;padding:24px 18px;}
+
+/* Header */
+.topbar{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:28px; gap:12px; flex-wrap:wrap;
+}
+.user-chip{
+  display:flex; align-items:center; gap:10px;
+  background:rgba(212,175,55,.06);
+  border:1px solid var(--border);
+  padding:8px 16px; border-radius:999px;
+  font-family:'Space Mono',monospace; font-size:.72rem;
+}
+.user-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
+.plan-badge{
+  font-family:'Space Mono',monospace; font-size:.7rem; font-weight:700;
+  padding:6px 14px; border-radius:999px;
+  background:rgba(212,175,55,.08); border:1px solid var(--border);
+  color:var(--gold); cursor:pointer; transition:all .2s;
+  display:flex; align-items:center; gap:8px;
+}
+.plan-badge:hover{border-color:var(--gold); box-shadow:0 0 12px var(--glow);}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;}
+.stat{
+  background:var(--card); border:1px solid var(--border);
+  border-radius:20px; padding:18px;
+  animation:fadeUp .5s ease both;
+}
+.stat:nth-child(2){animation-delay:.05s;}
+.stat label{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+.stat h2{font-size:2rem;font-weight:800;color:var(--gold);margin-top:6px;}
+
+/* Module cards */
+.modules{display:flex;flex-direction:column;gap:18px;}
+.mod{
+  background:var(--card); border:1px solid var(--border);
+  border-radius:24px; padding:24px;
+  animation:fadeUp .5s ease .1s both;
+  transition:border-color .3s, box-shadow .3s;
+}
+.mod:hover{border-color:rgba(212,175,55,.3); box-shadow:0 8px 32px rgba(0,0,0,.5);}
+.mod-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.mod-title{font-size:1.35rem;font-weight:800;}
+.badge{
+  padding:5px 12px; border-radius:999px;
+  font-family:'Space Mono',monospace; font-size:.65rem; font-weight:700;
+}
+.b-online{background:rgba(0,255,136,.1);color:var(--green);}
+.b-beta{background:rgba(212,175,55,.1);color:var(--gold);}
+.b-lock{background:rgba(90,90,114,.1);color:var(--muted);}
+.mod-desc{font-family:'Space Mono',monospace;font-size:.78rem;color:var(--muted);line-height:1.6;margin-bottom:18px;}
+.btn{
+  width:100%;padding:15px;border:none;border-radius:14px;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;
+  cursor:pointer;transition:all .25s;
+}
+.btn-gold{
+  background:linear-gradient(135deg,#f3e5ab,#d4af37,#8a6800);
+  color:#080810; box-shadow:0 4px 14px rgba(212,175,55,.25);
+}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,175,55,.4);filter:brightness(1.05);}
+.btn-outline{
+  background:transparent; border:1px solid var(--border); color:var(--muted);
+  margin-top:10px;
+}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold-light);}
+
+/* Tasks quick view */
+.tasks-panel{
+  background:var(--card); border:1px solid var(--border);
+  border-radius:24px; padding:24px; margin-top:18px;
+  animation:fadeUp .5s ease .15s both;
+}
+.panel-header{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;
+}
+.panel-title{font-size:1rem;font-weight:800;color:var(--gold-light);}
+.panel-count{
+  font-family:'Space Mono',monospace;font-size:.7rem;
+  background:rgba(212,175,55,.08);border:1px solid var(--border);
+  color:var(--gold);padding:4px 10px;border-radius:999px;
+}
+.task-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px; border-radius:14px;
+  background:rgba(0,0,0,.3); border:1px solid rgba(255,255,255,.04);
+  margin-bottom:10px; transition:border-color .2s;
+}
+.task-item:last-child{margin-bottom:0;}
+.task-item:hover{border-color:var(--border);}
+.task-prio{
+  width:4px; border-radius:999px; align-self:stretch; min-height:40px; flex-shrink:0;
+}
+.prio-high{background:var(--red);}
+.prio-normal{background:var(--gold);}
+.task-info{flex:1;}
+.task-name{font-size:.88rem;font-weight:700;margin-bottom:3px;}
+.task-meta{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);}
+.task-status{
+  font-family:'Space Mono',monospace;font-size:.62rem;font-weight:700;
+  padding:4px 10px;border-radius:8px;
+}
+.s-pending{background:rgba(61,181,255,.08);color:#61b5ff;}
+.s-progress{background:rgba(245,166,35,.08);color:var(--amber);}
+.s-review{background:rgba(212,175,55,.08);color:var(--gold);}
+.s-done{background:rgba(0,255,136,.08);color:var(--green);}
+.empty-state{
+  text-align:center;padding:28px;
+  font-family:'Space Mono',monospace;font-size:.75rem;color:var(--muted);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-
-body {
-    background: #050507;
-    color: white;
-    min-height: 100vh;
-    position: relative;
-    padding-bottom: 120px;
+/* Bottom Nav */
+.bottom-nav{
+  position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
+  width:92%; max-width:480px;
+  background:#0b0b10; border:1px solid var(--border);
+  border-radius:999px; padding:10px 14px;
+  display:flex; justify-content:space-around; z-index:999;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);
 }
-
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: url('https://i.postimg.cc/gky5YNH2/1778823817951-3.jpg') center/cover no-repeat;
-    opacity: .10;
-    z-index: -2;
+.nav-btn{
+  background:none;border:none;
+  font-family:'Space Mono',monospace; font-size:.72rem; font-weight:700;
+  color:var(--muted); cursor:pointer; padding:8px 12px; border-radius:999px;
+  transition:all .2s; display:flex; align-items:center; gap:6px;
 }
+.nav-btn:hover,.nav-btn.active{color:var(--gold);background:rgba(212,175,55,.08);}
 
-body.beta-mode::before {
-    background: url('https://i.postimg.cc/gjG6L4Yq/IMG-20260519-0001.jpg') center/cover no-repeat;
-    opacity: .12;
+/* Modal */
+.modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.88);
+  display:none;align-items:center;justify-content:center;
+  padding:20px;z-index:9999;
+  backdrop-filter:blur(4px);
 }
-
-body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,.7), rgba(0,0,0,.9));
-    z-index: -1;
+.modal.open{display:flex;}
+.modal-box{
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:28px;padding:28px;
+  width:100%;max-width:520px;
+  max-height:88vh;overflow-y:auto;
+  animation:popIn .25s cubic-bezier(.34,1.56,.64,1) both;
 }
-
-.page { padding: 22px; max-width: 480px; margin: 0 auto; }
-
-.logo { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; justify-content: space-between; }
-
-.user-info-title { 
-    font-size: 1rem; font-weight: 700; 
-    background: rgba(212,175,55,.1); 
-    padding: 6px 12px; 
-    border-radius: 20px;
-    border: 1px solid rgba(212,175,55,.2);
+@keyframes popIn{from{opacity:0;transform:scale(.92);}to{opacity:1;transform:scale(1);}}
+.modal-title{font-size:1.25rem;font-weight:800;color:var(--gold-light);margin-bottom:20px;}
+.field{margin-bottom:16px;}
+.field label{
+  display:block;font-family:'Space Mono',monospace;
+  font-size:.65rem;font-weight:700;text-transform:uppercase;
+  color:var(--muted);margin-bottom:8px;letter-spacing:.05em;
 }
-
-.glass {
-    background: #0f0f14;
-    border: 1px solid var(--border);
-    box-shadow: 0 8px 24px rgba(0,0,0,.5);
-    transition: border-color 0.3s, box-shadow 0.3s;
+.field input,.field textarea,.field select{
+  width:100%;padding:14px 16px;border-radius:12px;
+  border:1px solid rgba(212,175,55,.12);
+  background:rgba(0,0,0,.45);color:white;outline:none;
+  font-family:'Space Mono',monospace;font-size:.85rem;
+  transition:border-color .2s,box-shadow .2s;
 }
-
-.status-panel {
-    padding: 20px;
-    border-radius: 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    background: rgba(255,255,255,.02);
-    border: 1px solid var(--border);
+.field input:focus,.field textarea:focus,.field select:focus{
+  border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.1);
 }
-
-.status-indicator h2 {
-    font-size: 1.2rem;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
+.field textarea{resize:vertical;min-height:90px;}
+.field select option{background:#111;}
+.btn-sm{
+  padding:10px 18px;border:none;border-radius:10px;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:.82rem;
+  cursor:pointer;transition:all .2s;
 }
+.btn-sm-gold{background:linear-gradient(135deg,#f3e5ab,#d4af37);color:#080810;}
+.btn-sm-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.btn-sm-ghost:hover{border-color:var(--gold);color:var(--gold-light);}
+.modal-actions{display:flex;gap:10px;margin-top:20px;}
+.modal-actions .btn{flex:1;}
 
-.status-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 10px;
+/* GhostWriter */
+.gw-output{
+  background:rgba(0,0,0,.4);border:1px solid var(--border);
+  border-radius:14px;padding:16px;
+  font-family:'Space Mono',monospace;font-size:.8rem;
+  color:var(--gold-light);line-height:1.7;
+  min-height:120px;white-space:pre-wrap;
+  margin-top:16px;
 }
+.gw-output.loading{color:var(--muted);font-style:italic;}
+.typing-dot{display:inline-block;animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
 
-.status-dot.free { background: #00ff88; box-shadow: 0 0 8px rgba(0,255,136,.6); }
-.status-dot.beta { background: var(--gradient-gold); box-shadow: 0 0 10px rgba(212,175,55,.7); }
+.scrollbar-thin::-webkit-scrollbar{width:4px;}
+.scrollbar-thin::-webkit-scrollbar-track{background:transparent;}
+.scrollbar-thin::-webkit-scrollbar-thumb{background:rgba(212,175,55,.15);border-radius:999px;}
 
-.switch-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(0,0,0,.3);
-    padding: 8px 16px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-}
-
-.switch-label { font-weight: bold; font-size: 0.85rem; color: var(--primary); }
-.switch { position: relative; display: inline-block; width: 50px; height: 26px; }
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider {
-    position: absolute;
-    cursor: pointer;
-    inset: 0;
-    background-color: #222;
-    transition: .3s;
-    border-radius: 34px;
-    border: 1px solid rgba(255,255,255,.05);
-}
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: .3s;
-    border-radius: 50%;
-}
-input:checked + .slider { background: var(--gradient-gold); }
-input:checked + .slider:before { transform: translateX(24px); }
-
-.stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    margin-bottom: 25px;
-}
-
-.stat-card {
-    padding: 20px;
-    border-radius: 24px;
-}
-
-.stat-card h2 { font-size: 2.2rem; margin-top: 8px; font-weight: 800; color: var(--primary); }
-
-.grid { display: flex; flex-direction: column; gap: 20px; }
-
-.module-card {
-    padding: 24px;
-    border-radius: 24px;
-}
-
-.module-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.module-title { font-size: 1.5rem; font-weight: 800; }
-.module-desc {
-    font-size: .95rem;
-    line-height: 1.6;
-    color: #9d9db1;
-    margin: 12px 0 20px;
-}
-
-.badge {
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-weight: 800;
-    font-size: .75rem;
-}
-.online { background: rgba(0,255,136,.12); color: #00ff88; }
-.beta { background: rgba(212,175,55,.12); color: var(--primary); }
-.ready { background: rgba(245,166,35,.12); color: var(--amber); }
-
-.btn {
-    width: 100%;
-    padding: 16px;
-    border: none;
-    border-radius: 18px;
-    font-weight: 800;
-    font-size: 1rem;
-    cursor: pointer;
-    text-align: center;
-}
-.btn-primary { 
-    background: var(--gradient-gold); 
-    color: #080810; 
-    box-shadow: 0 4px 12px rgba(212,175,55,.3);
-    transition: all 0.3s;
-}
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,175,55,.5); filter: brightness(1.05); }
-.btn-secondary { background: transparent; border: 1px solid var(--border); color: #d4d4e2; margin-top: 12px; }
-.btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
-.btn-beta { background: var(--gradient-gold); color: #080810; font-weight: 800; margin-bottom: 15px; box-shadow: 0 4px 16px rgba(212,175,55,.4); }
-
-.bottom-nav {
-    position: fixed;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 92%;
-    max-width: 460px;
-    padding: 12px;
-    border-radius: 999px;
-    display: flex;
-    justify-content: space-around;
-    background: #0c0c10;
-    border: 1px solid var(--border);
-    z-index: 999;
-}
-
-.nav-btn {
-    background: none;
-    border: none;
-    color: #8e8ea0;
-    font-weight: 700;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.nav-btn:hover { color: var(--primary); }
-.nav-btn.active { color: var(--primary); }
-
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.85);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    z-index: 9999;
-}
-.modal-box {
-    width: 100%;
-    max-width: 500px;
-    padding: 28px;
-    border-radius: 24px;
-    text-align: center;
-    max-height: 85vh;
-    overflow-y: auto;
-}
-
-.progress-container {
-    width: 100%;
-    height: 8px;
-    border-radius: 999px;
-    overflow: hidden;
-    margin: 20px 0;
-    background: rgba(255,255,255,.05);
-}
-.progress-bar {
-    width: 0%;
-    height: 100%;
-    border-radius: 999px;
-    background: var(--gradient-gold);
-    transition: width .08s linear;
-    box-shadow: 0 0 12px rgba(212,175,55,.4);
-}
-
-.logs {
-    background: #020202;
-    border: 1px solid rgba(212,175,55,.15);
-    font-family: monospace;
-    font-size: .72rem;
-    color: var(--primary-light);
-    height: 140px;
-    overflow-y: auto;
-    padding: 14px;
-    border-radius: 14px;
-    line-height: 1.6;
-    text-align: left;
-}
-
-.input-group { margin-bottom: 18px; }
-.input-group label { display: block; font-size: .75rem; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; color: #b5b5c3; }
-.input-group select, .input-group input, .input-group textarea {
-    width: 100%;
-    padding: 16px;
-    border-radius: 16px;
-    border: 1px solid rgba(212,175,55,.15);
-    background: rgba(0,0,0,.45);
-    color: white;
-    outline: none;
-}
-.input-group input:focus, .input-group select:focus, .input-group textarea:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 8px rgba(212,175,55,.3);
-}
-.input-group textarea { resize: vertical; }
-
-#levelsGridSpeak {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 12px;
-    margin: 20px 0;
-    max-height: 350px;
-    overflow-y: auto;
-}
-
-.level-card {
-    background: rgba(0,0,0,0.3);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px;
-    cursor: pointer;
-    transition: all .2s ease;
-}
-.level-card:hover { border-color: var(--primary); transform: translateY(-2px); }
-.level-card.locked { opacity: 0.5; cursor: not-allowed; }
-.level-card.active { border-color: var(--primary); background: rgba(212,175,55,.1); }
-
-.lv-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; color: var(--primary-light); }
-.lv-desc { font-size: 0.7rem; color: #8e8ea0; }
-
-.lessons-list { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
-.lesson-row {
-    background: rgba(0,0,0,0.3);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.lesson-row.running { border-color: var(--amber); background: rgba(245,166,35,.05); }
-.lesson-row.done { border-color: var(--green); background: rgba(0,255,136,.04); }
-.lesson-row.error { border-color: var(--red); background: rgba(231,76,60,.04); }
-
-.lr-info { flex: 1; text-align: left; margin-left: 12px; }
-.lr-title { font-size: 0.85rem; font-weight: 600; color: var(--primary-light); }
-.lr-meta { font-size: 0.65rem; color: #8e8ea0; }
-
-.lr-status { font-size: 0.7rem; padding: 4px 8px; border-radius: 8px; }
-.lr-status.idle { color: #8e8ea0; }
-.lr-status.running { color: var(--amber); }
-.lr-status.done { color: var(--green); }
-.lr-status.error { color: var(--red); }
-
-.lr-btn {
-    padding: 6px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: white;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-.lr-btn:hover { background: var(--primary); border-color: var(--primary); color: #080810; }
-
-.action-bar { display: flex; gap: 10px; margin: 15px 0; flex-wrap: wrap; justify-content: center; }
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.module-card, .stat-card, .status-panel { animation: fadeIn 0.4s ease-out; }
-
-.beta-mode .glass, .beta-mode .module-card, .beta-mode .stat-card, .beta-mode .status-panel, .beta-mode .modal-box {
-    border: 1px solid rgba(212,175,55,.35);
-    box-shadow: 0 0 15px rgba(212,175,55,.18);
-}
-body.beta-mode h1, body.beta-mode .module-title {
-    background: var(--gradient-gold);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: rgba(0,0,0,.3); border-radius: 10px; }
-::-webkit-scrollbar-thumb { background: rgba(212,175,55,.3); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(212,175,55,.5); }
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 </style>
 </head>
 <body>
+<div class="bg-grid"></div>
 
-<div id="dashboardPage" class="page">
-    <div class="logo">
-        <h1 id="userHeaderTitle" class="user-info-title">Carregando...</h1>
-        <div class="switch-container">
-            <span class="switch-label" id="switchTexto">FREE</span>
-            <label class="switch">
-                <input type="checkbox" id="betaSwitch" onchange="ativarBeta()">
-                <span class="slider"></span>
-            </label>
-        </div>
+<div class="page">
+  <!-- TopBar -->
+  <div class="topbar">
+    <div class="user-chip">
+      <div class="user-dot"></div>
+      <span id="userLabel">Carregando...</span>
+    </div>
+    <div class="plan-badge" onclick="abrirPerfil()">
+      <span id="planLabel">FREE</span>
+      ▾
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <label>Tarefas Pendentes</label>
+      <h2 id="statPendentes">0</h2>
+    </div>
+    <div class="stat">
+      <label>Concluídas</label>
+      <h2 id="statConcluidas">0</h2>
+    </div>
+  </div>
+
+  <!-- Modules -->
+  <div class="modules">
+    <div class="mod">
+      <div class="mod-top">
+        <span class="mod-title">GhostWriter Pro</span>
+        <span class="badge b-beta">BETA</span>
+      </div>
+      <p class="mod-desc">Geração de conteúdo assistida por IA. Escreva textos, resumos, e-mails e mais com auxílio inteligente.</p>
+      <button class="btn btn-gold" onclick="abrirGhostWriter()">✍️ Abrir GhostWriter</button>
     </div>
 
-    <div class="status-panel glass">
-        <div><h3 style="font-size:1rem;color:#9d9db1;">Status do Plano</h3></div>
-        <div class="status-indicator">
-            <h2 id="statusPlano" class="free-status"><span class="status-dot free"></span>ON FREE</h2>
-        </div>
+    <div class="mod">
+      <div class="mod-top">
+        <span class="mod-title">Solicitar Suporte</span>
+        <span class="badge b-online">ONLINE</span>
+      </div>
+      <p class="mod-desc">Envie uma solicitação para a equipe de suporte. Descreva seu problema e aguarde atendimento.</p>
+      <button class="btn btn-gold" onclick="abrirSolicitacao()">📩 Abrir Chamado</button>
     </div>
+  </div>
 
-    <div class="stats">
-        <div class="stat-card glass">
-            <small style="color:#9d9db1;">Execuções Ativas</small>
-            <h2 id="execucoesAtivas">0</h2>
-        </div>
-        <div class="stat-card glass">
-            <small style="color:#9d9db1;">Tarefas Pendentes</small>
-            <h2 id="tarefasPendentes">0</h2>
-        </div>
+  <!-- Tasks panel -->
+  <div class="tasks-panel scrollbar-thin">
+    <div class="panel-header">
+      <span class="panel-title">📋 Minhas Tarefas</span>
+      <span class="panel-count" id="taskCount">0</span>
     </div>
-
-    <div class="grid">
-        <div class="module-card glass" id="moduleKuroSpeak">
-            <div class="module-top">
-                <span class="module-title">KuroSpeak IA</span>
-                <span class="badge online" id="kuroSpeakStatus">ONLINE</span>
-            </div>
-            <p class="module-desc">Sistema inteligente de automação de lições do SPEAK.</p>
-            <button class="btn btn-primary" onclick="abrirModalSpeak()">🎯 Injetar Módulo</button>
-        </div>
-        <div class="module-card glass">
-            <div class="module-top">
-                <span class="module-title">GhostWriter Pro</span>
-                <span class="badge beta">BETA</span>
-            </div>
-            <p class="module-desc">Sistema avançado de geração de conteúdo.</p>
-            <button class="btn btn-primary" onclick="abrirModalGhost()">✍️ Ativar GhostWriter</button>
-        </div>
-    </div>
+    <div id="tasksList"></div>
+  </div>
 </div>
 
-<div class="bottom-nav">
-    <button class="nav-btn active" onclick="scrollToTop()">🏠 Home</button>
-    <button class="nav-btn" onclick="verMinhasTarefas()">📋 Tarefas</button>
-    <button class="nav-btn" onclick="abrirConfiguracoes()">⚙️ Config</button>
-    <button class="nav-btn" onclick="deslogarSistema()">🚪 Sair</button>
-</div>
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="scrollTop()">🏠 Home</button>
+  <button class="nav-btn" onclick="abrirTarefas()">📋 Tarefas</button>
+  <button class="nav-btn" onclick="abrirPerfil()">⚙️ Perfil</button>
+  <button class="nav-btn" onclick="deslogar()">🚪 Sair</button>
+</nav>
 
-<div class="modal" id="taskModal">
-    <div class="modal-box glass" id="modalContent"></div>
+<!-- Modal container -->
+<div class="modal scrollbar-thin" id="modal">
+  <div class="modal-box" id="modalBox"></div>
 </div>
 
 <script>
-// ==================== VERIFICAÇÃO DE LOGIN ====================
+// ——— Auth guard ———
 const userRA = localStorage.getItem('sala_sem_futuro_ra');
-if (!userRA) { window.location.href = 'login.html'; }
-document.getElementById('userHeaderTitle').innerHTML = `👤 ${userRA.slice(0,12)}... | RA: ${userRA.slice(-6)}`;
+if (!userRA) window.location.href = 'login.html';
 
-// ==================== BACKEND LUNAR ====================
-const STORAGE_KEY = 'sala_sem_futuro_tokens';
-const API_BASE = 'https://learn.crimsonzerohub.xyz';
-const COURSE_ID = '87e8ec1d-a478-4d39-badd-4ddb20494eaf';
+document.getElementById('userLabel').textContent = `RA: ${userRA}`;
 
-let currentTokens = null;
-let currentLevels = [];
-let currentLessons = [];
-let lessonState = {};
-let autoRunning = false;
-let speakModalOpen = false;
-
-// ==================== FUNÇÕES DE TOKEN ====================
-function loadSavedTokens() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-        try {
-            currentTokens = JSON.parse(saved);
-            const statusEl = document.getElementById('kuroSpeakStatus');
-            statusEl.innerHTML = '⚡ PRONTO';
-            statusEl.className = 'badge ready';
-            return true;
-        } catch(e) {}
-    }
-    return false;
+// ——— Helpers ———
+function openModal(html) {
+  document.getElementById('modalBox').innerHTML = html;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+function scrollTop() { window.scrollTo({top:0,behavior:'smooth'}); }
+function deslogar() {
+  if (confirm('Deseja sair do sistema?')) {
+    localStorage.removeItem('sala_sem_futuro_logged');
+    window.location.href = 'login.html';
+  }
 }
 
-function saveTokens(tokens) {
-    currentTokens = tokens;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tokens));
-    const statusEl = document.getElementById('kuroSpeakStatus');
-    statusEl.innerHTML = '⚡ PRONTO';
-    statusEl.className = 'badge ready';
+// ——— Load tasks ———
+function carregarTarefas() {
+  const tarefas = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
+  const minhas = tarefas.filter(t => t.responsavel === userRA || t.responsavel === `@${userRA}`);
+  const pendentes = minhas.filter(t => !['concluida','entregue'].includes(t.status));
+  const concluidas = minhas.filter(t => ['concluida','entregue'].includes(t.status));
+
+  document.getElementById('statPendentes').textContent = pendentes.length;
+  document.getElementById('statConcluidas').textContent = concluidas.length;
+  document.getElementById('taskCount').textContent = pendentes.length;
+
+  const list = document.getElementById('tasksList');
+  if (pendentes.length === 0) {
+    list.innerHTML = `<div class="empty-state">// Nenhuma tarefa pendente atribuída</div>`;
+    return;
+  }
+  list.innerHTML = pendentes.map(t => {
+    const statusMap = {
+      pendente: ['s-pending','EM FILA'],
+      em_progresso: ['s-progress','EM PROGRESSO'],
+      aguardando_revisao: ['s-review','REVISÃO'],
+      inconclusivo: ['s-progress','INCONCLUSIVO'],
+      ajuda: ['s-pending','PRECISA DE AJUDA'],
+    };
+    const [sc, sl] = statusMap[t.status] || ['s-pending','EM FILA'];
+    return `<div class="task-item">
+      <div class="task-prio ${t.prioridade==='high'?'prio-high':'prio-normal'}"></div>
+      <div class="task-info">
+        <div class="task-name">${t.titulo}</div>
+        <div class="task-meta">#${t.id} • ${new Date(t.data_criacao).toLocaleDateString('pt-BR')}</div>
+      </div>
+      <div class="task-status ${sc}">${sl}</div>
+    </div>`;
+  }).join('');
 }
 
-function extractAccess() {
-    const efid = currentTokens?.efid_tokens;
-    if (!efid) return '';
-    if (typeof efid === 'object') return efid.access || '';
-    try { return JSON.parse(efid).access || ''; } catch { return ''; }
+// ——— GhostWriter ———
+function abrirGhostWriter() {
+  openModal(`
+    <div class="modal-title">✍️ GhostWriter Pro</div>
+    <div class="field">
+      <label>Tipo de conteúdo</label>
+      <select id="gwTipo">
+        <option value="texto">Texto livre</option>
+        <option value="email">E-mail</option>
+        <option value="resumo">Resumo</option>
+        <option value="lista">Lista de ideias</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Descreva o que quer gerar</label>
+      <textarea id="gwPrompt" placeholder="Ex: Escreva um e-mail formal pedindo prorrogação de prazo..."></textarea>
+    </div>
+    <div id="gwOutput" class="gw-output" style="display:none;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-gold" onclick="gerarConteudo()">✨ Gerar</button>
+      <button class="btn btn-outline" onclick="closeModal()">Fechar</button>
+    </div>
+  `);
 }
 
-function extractAccount() {
-    const efid = currentTokens?.efid_tokens;
-    if (!efid) return '';
-    if (typeof efid === 'object') return efid.account || '';
-    try { return JSON.parse(efid).account || ''; } catch { return ''; }
-}
-// ==================== API DO LUNAR ====================
-async function apiPost(endpoint, body) {
-    const r = await fetch(`${API_BASE}${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tokens: currentTokens, ...body }),
-    });
-    const data = await r.json();
-    if (!r.ok) throw new Error(data.detail || JSON.stringify(data));
-    return data;
-}
+function gerarConteudo() {
+  const tipo = document.getElementById('gwTipo').value;
+  const prompt = document.getElementById('gwPrompt').value.trim();
+  if (!prompt) { alert('Descreva o que quer gerar!'); return; }
+  const out = document.getElementById('gwOutput');
+  out.style.display = 'block';
+  out.className = 'gw-output loading';
+  out.innerHTML = `Gerando conteúdo<span class="typing-dot">...</span>`;
 
-async function loadLevels() {
-    const data = await apiPost('/api/levels', {});
-    currentLevels = data.levels || [];
-    return currentLevels;
-}
+  // Simulação de geração (substitua por chamada real de API se desejar)
+  const templates = {
+    email: `Assunto: [Título do e-mail]\n\nPrezado(a),\n\nEspero que este e-mail o(a) encontre bem.\n\n${prompt}\n\nAguardo retorno.\n\nAtenciosamente,\n[Seu nome]`,
+    resumo: `📋 RESUMO\n\n${prompt}\n\n• Ponto principal 1\n• Ponto principal 2\n• Conclusão`,
+    lista: `💡 IDEIAS GERADAS\n\n1. Primeira ideia baseada em: ${prompt}\n2. Segunda abordagem alternativa\n3. Terceira perspectiva\n4. Variação criativa\n5. Opção adicional`,
+    texto: `${prompt}\n\n[Conteúdo gerado com base no tema solicitado. Edite conforme necessário para personalizar.]`,
+  };
 
-async function loadLevelDetail(levelId) {
-    const data = await apiPost('/api/level-detail', { level_id: levelId });
-    const units = data.units || data.lessons || data.nodes || [];
-    let nodes = [];
-    for (const u of units) {
-        const children = u.lessons || u.nodes || u.activities || [];
-        if (children.length) {
-            nodes.push(...children.map(c => ({ ...c, _unitName: u.name || u.title || '' })));
-        } else if (u.id) {
-            nodes.push(u);
-        }
-    }
-    return nodes.length ? nodes : units;
+  setTimeout(() => {
+    out.className = 'gw-output';
+    out.textContent = templates[tipo] || templates.texto;
+  }, 1200);
 }
 
-async function openLesson(nodeId) {
-    return await apiPost('/api/open-lesson', { node_id: nodeId });
+// ——— Suporte ———
+function abrirSolicitacao() {
+  openModal(`
+    <div class="modal-title">📩 Abrir Chamado de Suporte</div>
+    <div class="field">
+      <label>Título do problema</label>
+      <input type="text" id="solTitulo" placeholder="Ex: Erro ao acessar módulo">
+    </div>
+    <div class="field">
+      <label>Descrição detalhada</label>
+      <textarea id="solDesc" placeholder="Descreva o que aconteceu, quando e como reproduzir..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-gold" onclick="enviarSolicitacao()">📤 Enviar</button>
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+    </div>
+  `);
 }
 
-async function autoCompleteLesson(lessonId, lastVersion, sessionId, events) {
-    return await apiPost('/api/auto-complete', {
-        lesson_id: lessonId,
-        last_version: lastVersion,
-        session_id: sessionId,
-        events: events,
-    });
+function enviarSolicitacao() {
+  const titulo = document.getElementById('solTitulo').value.trim();
+  const desc = document.getElementById('solDesc').value.trim();
+  if (!titulo || !desc) { alert('Preencha todos os campos!'); return; }
+  const lista = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas_alunos') || '[]');
+  lista.unshift({
+    id: Date.now(),
+    aluno: userRA,
+    titulo,
+    descricao: desc,
+    status: 'pendente',
+    data: new Date().toISOString(),
+  });
+  localStorage.setItem('sala_sem_futuro_tarefas_alunos', JSON.stringify(lista));
+  closeModal();
+  alert('✅ Chamado enviado! A equipe irá verificar em breve.');
 }
 
-async function completeLesson(lessonId, nodeId, lastVersion, enrollmentId) {
-    return await apiPost('/api/complete-lesson', {
-        lesson_id: lessonId,
-        node_id: nodeId,
-        last_version: lastVersion,
-        enrollment_id: enrollmentId || COURSE_ID,
-    });
+// ——— Tarefas modal ———
+function abrirTarefas() {
+  const tarefas = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
+  const minhas = tarefas.filter(t => t.responsavel === userRA || t.responsavel === `@${userRA}`);
+  const statusLabel = {
+    pendente:'🔵 Em Fila', em_progresso:'⚡ Em Progresso',
+    aguardando_revisao:'⏳ Revisão', concluida:'✅ Concluída',
+    inconclusivo:'⚠️ Inconclusivo', ajuda:'🆘 Ajuda',
+  };
+  openModal(`
+    <div class="modal-title">📋 Todas as Minhas Tarefas</div>
+    ${minhas.length === 0
+      ? `<div class="empty-state">// Nenhuma tarefa atribuída</div>`
+      : minhas.map(t => `
+        <div class="task-item" style="margin-bottom:10px;">
+          <div class="task-prio ${t.prioridade==='high'?'prio-high':'prio-normal'}"></div>
+          <div class="task-info">
+            <div class="task-name">${t.titulo}</div>
+            <div class="task-meta">${t.descricao.slice(0,60)}...</div>
+            <div class="task-meta" style="margin-top:4px;">${statusLabel[t.status]||t.status}</div>
+          </div>
+        </div>`).join('')}
+    <button class="btn btn-outline" onclick="closeModal()" style="margin-top:16px;">Fechar</button>
+  `);
 }
 
-async function runLesson(nodeId, updateProgress) {
-    lessonState[nodeId] = { status: 'running' };
-    if (updateProgress) updateProgress(nodeId);
-
-    try {
-        addLog(`🎯 [${nodeId.slice(0,8)}] Abrindo lição...`, 'amber');
-        const opened = await openLesson(nodeId);
-        const lessonId = opened.lessonId;
-        const lastVersion = opened.lastVersion || 0;
-        const resp = opened.commandResponse || {};
-        const history = resp.eventHistory || resp.state?.eventHistory || {};
-        const events = history.events || [];
-        const sessionId = resp.state?.sessionId || resp.sessionId || '';
-
-        addLog(`📊 [${nodeId.slice(0,8)}] ${events.length} eventos | v${lastVersion}`, 'info');
-
-        lessonState[nodeId] = { status: 'running', lessonId, lastVersion, sessionId, events };
-        if (updateProgress) updateProgress(nodeId);
-
-        const hasActivities = events.some(e => e.type === 'activity-sent');
-        let newVersion = lastVersion;
-
-        if (hasActivities) {
-            addLog(`⚡ [${nodeId.slice(0,8)}] Processando...`, 'amber');
-            const ac = await autoCompleteLesson(lessonId, lastVersion, sessionId, events);
-            newVersion = ac.new_last_version || lastVersion;
-            addLog(`✅ [${nodeId.slice(0,8)}] ${ac.commands_sent} comandos`, 'green');
-        } else {
-            addLog(`📝 [${nodeId.slice(0,8)}] Sem atividades`, 'info');
-        }
-
-        await completeLesson(lessonId, nodeId, newVersion, null);
-        addLog(`🎉 [${nodeId.slice(0,8)}] Concluída!`, 'green');
-
-        lessonState[nodeId] = { status: 'done', lessonId };
-        if (updateProgress) updateProgress(nodeId);
-
-        const doneCount = Object.values(lessonState).filter(s => s.status === 'done').length;
-        const totalCount = Object.keys(lessonState).length;
-        document.getElementById('execucoesAtivas').innerText = `${doneCount}/${totalCount}`;
-
-    } catch(e) {
-        addLog(`❌ [${nodeId.slice(0,8)}] Erro: ${e.message}`, 'red');
-        lessonState[nodeId] = { status: 'error', error: e.message };
-        if (updateProgress) updateProgress(nodeId);
-    }
+// ——— Perfil ———
+function abrirPerfil() {
+  const loginTime = localStorage.getItem('sala_sem_futuro_login_time');
+  openModal(`
+    <div class="modal-title">👤 Perfil</div>
+    <div style="background:rgba(0,0,0,.3);border-radius:14px;padding:18px;font-family:'Space Mono',monospace;font-size:.78rem;line-height:2;">
+      <div>🔑 RA: <strong style="color:var(--gold-light)">${userRA}</strong></div>
+      <div>📅 Login: <strong>${loginTime ? new Date(loginTime).toLocaleString('pt-BR') : 'N/A'}</strong></div>
+      <div>📦 Plano: <strong>FREE</strong></div>
+    </div>
+    <button class="btn btn-outline" onclick="closeModal()" style="margin-top:16px;">Fechar</button>
+  `);
 }
 
-function addLog(msg, type = 'info') {
-    const logsDiv = document.getElementById('speakLogs');
-    if (!logsDiv) return;
-    const line = document.createElement('div');
-    const time = new Date().toLocaleTimeString('pt-BR');
-    const colors = { green: '#00ff88', amber: '#f5a623', red: '#e74c3c', info: '#d4af37' };
-    line.innerHTML = `<span style="color:#666">[${time}]</span> <span style="color:${colors[type] || colors.info}">${msg}</span>`;
-    logsDiv.appendChild(line);
-    logsDiv.scrollTop = logsDiv.scrollHeight;
-}
-
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-// ==================== MODAL SPEAK ====================
-function abrirModalSpeak() {
-    if (speakModalOpen) return;
-    speakModalOpen = true;
-    
-    const caixa = document.getElementById('modalContent');
-    caixa.innerHTML = `
-        <h2 style="margin-bottom:20px; color: var(--primary);">🤖 KuroSpeak IA</h2>
-        
-        <div style="background:rgba(0,0,0,.3); border-radius:16px; padding:15px; margin-bottom:20px;">
-            <div class="input-group">
-                <label>🔑 Tokens SPEAK (Base64)</label>
-                <textarea id="tokenInput" placeholder="Cole o token Base64 aqui..." rows="2"></textarea>
-                <small style="color:#8e8ea0; font-size:0.65rem;">Obtenha o token pela extensão</small>
-            </div>
-            <button class="btn btn-beta" onclick="validarTokens()" style="margin:0;">🔓 Validar Tokens</button>
-            <div id="tokenStatus" style="margin-top:10px; font-size:0.8rem;"></div>
-        </div>
-        
-        <div id="speakContent" style="display:none;">
-            <div class="action-bar">
-                <button class="btn btn-primary" onclick="carregarNiveisSpeak()" style="width:auto;">📚 Carregar Níveis</button>
-                <button class="btn btn-secondary" onclick="atualizarProgressoGeral()" style="width:auto;">🔄 Atualizar</button>
-            </div>
-            <div id="levelsGridSpeak"></div>
-            <div id="lessonsPanelSpeak" style="display:none;">
-                <div class="action-bar">
-                    <button class="btn btn-primary" onclick="autoCompleteAllLessons()" style="width:auto;">▶ Completar Todas</button>
-                    <button class="btn btn-secondary" onclick="fecharLessonsPanel()" style="width:auto;">← Voltar</button>
-                </div>
-                <div id="lessonsListSpeak" class="lessons-list"></div>
-            </div>
-        </div>
-        
-        <div class="logs" id="speakLogs" style="margin-top:20px; height:120px;"></div>
-        <small style="color:#666;">Backend Lunar • Auto-complete inteligente</small>
-        <button class="btn btn-secondary" onclick="fecharModalSpeak()" style="margin-top:15px;">Fechar</button>
-    `;
-    
-    document.getElementById('taskModal').style.display = 'flex';
-    
-    if (currentTokens) {
-        document.getElementById('tokenStatus').innerHTML = '<span style="color:#00ff88;">✓ Tokens carregados</span>';
-        document.getElementById('speakContent').style.display = 'block';
-        carregarNiveisSpeak();
-    }
-}
-
-function fecharModalSpeak() {
-    speakModalOpen = false;
-    document.getElementById('taskModal').style.display = 'none';
-}
-
-async function validarTokens() {
-    const tokenInput = document.getElementById('tokenInput').value.trim();
-    const statusDiv = document.getElementById('tokenStatus');
-    
-    if (!tokenInput) {
-        statusDiv.innerHTML = '<span style="color:#e74c3c;">❌ Cole o token Base64</span>';
-        return;
-    }
-    
-    try {
-        statusDiv.innerHTML = '<span style="color:#f5a623;">⏳ Decodificando...</span>';
-        const json = decodeURIComponent(escape(atob(tokenInput)));
-        const parsed = JSON.parse(json);
-        
-        const tokens = {};
-        for (const [k, v] of Object.entries(parsed)) {
-            if (k === 'catalyst_token' && typeof v === 'string') {
-                try { tokens[k] = decodeURIComponent(v); }
-                catch { tokens[k] = v; }
-            } else {
-                tokens[k] = v;
-            }
-        }
-        
-        if (typeof tokens.efid_tokens === 'string') {
-            try { tokens.efid_tokens = JSON.parse(decodeURIComponent(tokens.efid_tokens)); }
-            catch { try { tokens.efid_tokens = JSON.parse(tokens.efid_tokens); } catch {} }
-        }
-        
-        saveTokens(tokens);
-        statusDiv.innerHTML = '<span style="color:#00ff88;">✅ Tokens validados!</span>';
-        document.getElementById('speakContent').style.display = 'block';
-        addLog('Tokens carregados!', 'green');
-        carregarNiveisSpeak();
-        
-    } catch(e) {
-        statusDiv.innerHTML = `<span style="color:#e74c3c;">❌ Erro: ${e.message}</span>`;
-        addLog(`Erro: ${e.message}`, 'red');
-    }
-}
-async function carregarNiveisSpeak() {
-    if (!currentTokens) {
-        addLog('Cole os tokens primeiro!', 'red');
-        return;
-    }
-    
-    addLog('Carregando níveis...', 'amber');
-    const levelsDiv = document.getElementById('levelsGridSpeak');
-    levelsDiv.innerHTML = '<div style="text-align:center; color:#8e8ea0;">⏳ Carregando...</div>';
-    
-    try {
-        const levels = await loadLevels();
-        currentLevels = levels;
-        
-        if (!levels.length) {
-            levelsDiv.innerHTML = '<div style="text-align:center; color:#e74c3c;">Nenhum nível</div>';
-            return;
-        }
-        
-        levelsDiv.innerHTML = '';
-        for (const lv of levels) {
-            const card = document.createElement('div');
-            card.className = 'level-card' + (lv.isLocked ? ' locked' : '');
-            card.onclick = () => { if (!lv.isLocked) selectLevelSpeak(lv); };
-            card.innerHTML = `
-                <div class="lv-title">${lv.title || 'Nível ' + (lv.sequenceNumber || '?')}</div>
-                <div class="lv-desc">${(lv.description || '').slice(0,60)}</div>
-            `;
-            levelsDiv.appendChild(card);
-        }
-        addLog(`${levels.length} níveis carregados`, 'green');
-        
-    } catch(e) {
-        levelsDiv.innerHTML = `<div style="text-align:center; color:#e74c3c;">Erro: ${e.message}</div>`;
-        addLog(`Erro: ${e.message}`, 'red');
-    }
-}
-
-async function selectLevelSpeak(lv) {
-    addLog(`📖 Carregando lições: ${lv.title}`, 'amber');
-    
-    const levelsDiv = document.getElementById('levelsGridSpeak');
-    const lessonsPanel = document.getElementById('lessonsPanelSpeak');
-    const lessonsList = document.getElementById('lessonsListSpeak');
-    
-    levelsDiv.style.display = 'none';
-    lessonsPanel.style.display = 'block';
-    lessonsList.innerHTML = '<div style="text-align:center; color:#8e8ea0;">⏳ Carregando...</div>';
-    
-    try {
-        const lessons = await loadLevelDetail(lv.id);
-        currentLessons = lessons;
-        lessonState = {};
-        
-        lessonsList.innerHTML = '';
-        for (const node of lessons) {
-            const title = node.name || node.title || node.lessonTitle || `Lição ${node.id.slice(0,8)}`;
-            const meta = node._unitName || node.type || '';
-            
-            const row = document.createElement('div');
-            row.id = `speak-row-${node.id}`;
-            row.className = 'lesson-row';
-            row.innerHTML = `
-                <div class="lr-info">
-                    <div class="lr-title">${title}</div>
-                    <div class="lr-meta">${meta}</div>
-                </div>
-                <div class="lr-status idle" id="speak-st-${node.id}">⏳ aguardando</div>
-                <button class="lr-btn" onclick="runSingleLesson('${node.id}')">▶ Iniciar</button>
-            `;
-            lessonsList.appendChild(row);
-        }
-        
-        addLog(`${lessons.length} lições carregadas`, 'green');
-        document.getElementById('execucoesAtivas').innerText = `0/${lessons.length}`;
-        
-    } catch(e) {
-        lessonsList.innerHTML = `<div style="text-align:center; color:#e74c3c;">Erro: ${e.message}</div>`;
-        addLog(`Erro: ${e.message}`, 'red');
-    }
-}
-
-function fecharLessonsPanel() {
-    document.getElementById('levelsGridSpeak').style.display = 'grid';
-    document.getElementById('lessonsPanelSpeak').style.display = 'none';
-}
-
-function updateLessonRow(nodeId) {
-    const st = lessonState[nodeId];
-    if (!st) return;
-    
-    const stEl = document.getElementById(`speak-st-${nodeId}`);
-    const row = document.getElementById(`speak-row-${nodeId}`);
-    const btn = row?.querySelector('.lr-btn');
-    
-    if (st.status === 'running') {
-        row?.classList.add('running');
-        if (stEl) { stEl.className = 'lr-status running'; stEl.innerHTML = '⚡ executando...'; }
-        if (btn) { btn.disabled = true; btn.innerHTML = '⏳'; }
-    } else if (st.status === 'done') {
-        row?.classList.add('done');
-        if (stEl) { stEl.className = 'lr-status done'; stEl.innerHTML = '✅ concluído'; }
-        if (btn) { btn.disabled = true; btn.innerHTML = '✓'; }
-    } else if (st.status === 'error') {
-        row?.classList.add('error');
-        if (stEl) { stEl.className = 'lr-status error'; stEl.innerHTML = '⚠️ erro'; }
-        if (btn) { btn.disabled = false; btn.innerHTML = '⟳ Tentar'; }
-    }
-}
-
-async function runSingleLesson(nodeId) {
-    await runLesson(nodeId, updateLessonRow);
-}
-
-async function autoCompleteAllLessons() {
-    if (autoRunning) return;
-    autoRunning = true;
-    
-    const pending = currentLessons.filter(n => {
-        const s = lessonState[n.id]?.status;
-        return !s || s === 'error';
-    });
-    
-    if (pending.length === 0) {
-        addLog('Todas concluídas!', 'green');
-        autoRunning = false;
-        return;
-    }
-    
-    addLog(`🚀 Iniciando: ${pending.length} lições`, 'info');
-    
-    for (let i = 0; i < pending.length; i++) {
-        const node = pending[i];
-        addLog(`📌 Lição ${i+1}/${pending.length}`, 'amber');
-        await runLesson(node.id, updateLessonRow);
-        if (i < pending.length - 1) await sleep(1500);
-    }
-    
-    autoRunning = false;
-    addLog('🎉 Auto-complete finalizado!', 'green');
-}
-
-function atualizarProgressoGeral() {
-    if (!currentLessons.length) {
-        addLog('Selecione um nível primeiro.', 'info');
-        return;
-    }
-    const done = Object.values(lessonState).filter(s => s.status === 'done').length;
-    const total = currentLessons.length;
-    addLog(`📊 Progresso: ${done}/${total} concluídas`, 'info');
-    document.getElementById('execucoesAtivas').innerText = `${done}/${total}`;
-}
-// ==================== FUNÇÕES DO SISTEMA ====================
-function abrirModalGhost() {
-    const caixa = document.getElementById('modalContent');
-    caixa.innerHTML = `
-        <h2 style="margin-bottom:20px; color: var(--primary);">✍️ GhostWriter Pro</h2>
-        <div style="background:rgba(0,0,0,.3); border-radius:16px; padding:20px; text-align:center;">
-            <p style="color:#ffd700;">⚡ Módulo em Desenvolvimento</p>
-            <p style="color:#8e8ea0;">Em breve: geração automática de respostas.</p>
-        </div>
-        <button class="btn btn-secondary" onclick="fecharModalSpeak()" style="margin-top:20px;">Fechar</button>
-    `;
-    document.getElementById('taskModal').style.display = 'flex';
-}
-
-function verMinhasTarefas() {
-    const tarefas = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
-    const minhasTarefas = tarefas.filter(t => t.responsavel === userRA || t.responsavel === userRA.split('@')[0]);
-    
-    const caixa = document.getElementById('modalContent');
-    if (minhasTarefas.length === 0) {
-        caixa.innerHTML = `
-            <h2 style="color: var(--primary);">📋 Minhas Tarefas</h2>
-            <p style="color:#8e8ea0;">Nenhuma tarefa atribuída.</p>
-            <button class="btn btn-secondary" onclick="fecharModalSpeak()">Fechar</button>
-        `;
-    } else {
-        let html = `<h2 style="color: var(--primary);">📋 Minhas Tarefas (${minhasTarefas.length})</h2>`;
-        minhasTarefas.forEach(t => {
-            let statusText = '🔵 EM FILA';
-            let statusColor = '#61b5ff';
-            if (t.status === 'em_progresso') { statusText = '⚡ EM PROGRESSO'; statusColor = '#ffcc00'; }
-            if (t.status === 'aguardando_revisao') { statusText = '⏳ AGUARDANDO REVISÃO'; statusColor = '#ff9f43'; }
-            if (t.status === 'concluida') { statusText = '🏆 CONCLUÍDO'; statusColor = '#d4af37'; }
-            
-            html += `
-                <div style="background:rgba(0,0,0,.3); border-left:4px solid ${t.prioridade === 'high' ? '#e74c3c' : '#d4af37'}; padding:15px; margin-bottom:10px; text-align:left;">
-                    <div style="font-weight:700;">${t.titulo}</div>
-                    <div style="font-size:0.75rem; color:#8e8ea0;">${t.descricao}</div>
-                    <div style="margin-top:10px;"><span style="color:${statusColor};">${statusText}</span></div>
-                </div>
-            `;
-        });
-        html += `<button class="btn btn-secondary" onclick="fecharModalSpeak()">Fechar</button>`;
-        caixa.innerHTML = html;
-    }
-    document.getElementById('taskModal').style.display = 'flex';
-}
-
-function abrirConfiguracoes() {
-    const caixa = document.getElementById('modalContent');
-    caixa.innerHTML = `
-        <h2 style="color: var(--primary);">⚙️ Configurações</h2>
-        <div class="input-group"><label>API Base</label><input type="text" id="apiBaseInput" value="${API_BASE}"></div>
-        <div class="input-group"><label>Course ID</label><input type="text" id="courseIdInput" value="${COURSE_ID}"></div>
-        <button class="btn btn-primary" onclick="salvarConfiguracoes()">💾 Salvar</button>
-        <div style="margin-top:15px; padding:10px; background:rgba(0,0,0,.3); border-radius:12px;">
-            <p style="font-size:0.7rem;">RA: ${userRA}</p>
-            <p style="font-size:0.7rem;">Tokens: ${currentTokens ? '✅' : '❌'}</p>
-        </div>
-        <button class="btn btn-secondary" onclick="fecharModalSpeak()" style="margin-top:15px;">Fechar</button>
-    `;
-    document.getElementById('taskModal').style.display = 'flex';
-}
-
-function salvarConfiguracoes() {
-    const novaApi = document.getElementById('apiBaseInput').value;
-    if (novaApi) localStorage.setItem('sala_sem_futuro_api_base', novaApi);
-    addLog('Configurações salvas!', 'green');
-    fecharModalSpeak();
-}
-
-function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-
-function ativarBeta() {
-    document.body.classList.toggle('beta-mode');
-    const status = document.getElementById('statusPlano');
-    const texto = document.getElementById('switchTexto');
-    
-    if(document.body.classList.contains('beta-mode')){
-        status.innerHTML = `<span class="status-dot beta"></span>ON BETA`;
-        texto.innerText = 'BETA';
-    } else {
-        status.innerHTML = `<span class="status-dot free"></span>ON FREE`;
-        texto.innerText = 'FREE';
-    }
-}
-
-function deslogarSistema() {
-    if (confirm('Deseja sair?')) {
-        localStorage.removeItem('sala_sem_futuro_logged');
-        window.location.href = 'login.html';
-    }
-}
-
-function atualizarTarefasPendentes() {
-    const tarefas = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
-    const minhasTarefas = tarefas.filter(t => t.responsavel === userRA || t.responsavel === userRA.split('@')[0]);
-    const pendentes = minhasTarefas.filter(t => t.status !== 'concluida');
-    document.getElementById('tarefasPendentes').innerText = pendentes.length;
-}
-
-// ==================== INICIALIZAÇÃO ====================
-loadSavedTokens();
-atualizarTarefasPendentes();
-setInterval(atualizarTarefasPendentes, 5000);
-document.getElementById('execucoesAtivas').innerText = '0';
+// ——— Init ———
+carregarTarefas();
+setInterval(carregarTarefas, 6000);
 </script>
 </body>
 </html>
