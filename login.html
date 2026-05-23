@@ -1,204 +1,256 @@
-<!DOCTYPE html>    
-<html lang="pt-BR">    
-<head>    
-<meta charset="UTF-8">    
-<meta name="viewport" content="width=device-width, initial-scale=1.0">    
-<title>Sala sem Futuro OS - Login</title>    
-<style>    
-:root{
-    --bg:#07070a;
-    --card:#0f0f16;
-    --border:rgba(255,255,255,.08);
-    --red:#ff3333;
-    --gradient-normal: linear-gradient(135deg, #8b5cf6, #d946ef);
-}    
-*{ margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }    
-body{
-    background:#050507;
-    color:white;
-    min-height:100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}    
-body::after{
-    content:'';
-    position:fixed;
-    inset:0;
-    background: linear-gradient(to bottom, rgba(0,0,0,.7), rgba(0,0,0,.9));
-    z-index:-1;
-}    
-.login-container{
-    width:100%;
-    max-width:420px;
-    padding: 0 15px;
-}    
-.logo{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:28px;
-}    
-.logo img{
-    width:42px;
-    height:42px;
-    border-radius:12px;
-}    
-.logo h1{
-    font-size:1.9rem;
-    font-weight:800;
-}    
-.glass{
-    background:#0f0f14;
-    border: 1px solid var(--border);
-    box-shadow: 0 8px 24px rgba(0,0,0,.5);
-}    
-.login-box{
-    padding:28px;
-    border-radius:24px;
-}    
-.input-group{
-    margin-bottom:18px;
-    position: relative;
-}    
-.input-group label{
-    display:block;
-    font-size:.75rem;
-    margin-bottom:8px;
-    text-transform:uppercase;
-    font-weight:700;
-    color:#b5b5c3;
-}    
-.input-group input{
-    width:100%;
-    padding:16px;
-    border-radius:16px;
-    border: 1px solid rgba(255,255,255,.07);
-    background:rgba(0,0,0,.45);
-    color:white;
-    outline:none;
-    transition: border-color 0.3s;
-}    
-.input-group input.invalid {
-    border-color: var(--red) !important;
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sala sem Futuro OS — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060608;
+  --card: #0d0d12;
+  --border: rgba(212,175,55,.15);
+  --gold: #d4af37;
+  --gold-light: #f3e5ab;
+  --muted: #5a5a72;
+  --text: #e8e8f0;
+  --red: #ff4757;
+  --green: #00ff88;
+  --glow: rgba(212,175,55,.2);
 }
-.error-msg {
-    display: none;
-    color: var(--red);
-    font-size: 0.75rem;
-    margin-top: 6px;
-    font-weight: 600;
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
-.password-wrapper{ position:relative; }    
-.eye-btn{
-    position:absolute;
-    right:14px;
-    top:50%;
-    transform:translateY(-50%);
-    background:none;
-    border:none;
-    font-size:1.2rem;
-    cursor:pointer;
-}    
-.btn{
-    width:100%;
-    padding:16px;
-    border:none;
-    border-radius:18px;
-    font-weight:800;
-    font-size:1rem;
-    cursor:pointer;
-    text-align:center;
-}    
-.btn-primary{
-    background:var(--gradient-normal);
-    color:white;
-    box-shadow: 0 4px 12px rgba(168,85,247,.2);
-}    
+.bg-grid {
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(212,175,55,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212,175,55,.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  z-index: 0;
+}
+.bg-glow {
+  position: fixed; width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,175,55,.07) 0%, transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%,-50%);
+  z-index: 0;
+}
+.wrap {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 420px;
+  animation: fadeUp .6s ease both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.back-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Space Mono', monospace; font-size: .75rem;
+  color: var(--muted); text-decoration: none;
+  margin-bottom: 32px;
+  transition: color .2s;
+}
+.back-link:hover { color: var(--gold); }
+.header { margin-bottom: 36px; }
+.logo-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+}
+.logo-img {
+  width: 44px; height: 44px; border-radius: 12px;
+  border: 1px solid var(--border);
+  object-fit: cover;
+}
+.logo-text { font-size: 1.5rem; font-weight: 800; }
+.logo-text span {
+  background: linear-gradient(135deg, #ffe066, #d4af37);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.tagline { font-family: 'Space Mono', monospace; font-size: .72rem; color: var(--muted); }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 32px;
+  box-shadow: 0 24px 64px rgba(0,0,0,.6);
+}
+.card-title {
+  font-size: 1.05rem; font-weight: 800;
+  color: var(--gold-light); margin-bottom: 28px;
+  display: flex; align-items: center; gap: 10px;
+}
+.field { margin-bottom: 20px; }
+.field label {
+  display: block; font-family: 'Space Mono', monospace;
+  font-size: .68rem; font-weight: 700; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px; letter-spacing: .06em;
+}
+.field input {
+  width: 100%; padding: 15px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(212,175,55,.12);
+  background: rgba(0,0,0,.45);
+  color: white; outline: none;
+  font-family: 'Space Mono', monospace; font-size: .9rem;
+  transition: border-color .25s, box-shadow .25s;
+}
+.field input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(212,175,55,.1);
+}
+.field input.invalid { border-color: var(--red) !important; }
+.pw-wrap { position: relative; }
+.pw-wrap input { padding-right: 52px; }
+.eye-btn {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; font-size: 1.1rem; opacity: .5;
+  transition: opacity .2s;
+}
+.eye-btn:hover { opacity: 1; }
+.err-msg {
+  display: none; color: var(--red);
+  font-family: 'Space Mono', monospace; font-size: .68rem;
+  margin-top: 6px; font-weight: 700;
+}
+.err-msg.show { display: block; }
+
+.btn {
+  width: 100%; padding: 16px;
+  border: none; border-radius: 16px;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
+  cursor: pointer; transition: all .25s;
+}
+.btn-gold {
+  background: linear-gradient(135deg, #f3e5ab, #d4af37, #8a6800);
+  color: #080810;
+  box-shadow: 0 4px 16px rgba(212,175,55,.25);
+}
+.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,175,55,.4); filter: brightness(1.05); }
+.btn-gold:active { transform: translateY(0); }
+
+.divider {
+  display: flex; align-items: center; gap: 14px;
+  margin: 20px 0;
+  font-family: 'Space Mono', monospace; font-size: .65rem; color: #2a2a3a;
+}
+.divider::before, .divider::after {
+  content:''; flex:1; height:1px; background: rgba(255,255,255,.06);
+}
 .btn-discord {
-    background: #5865F2;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 15px;
-    transition: background 0.2s;
+  background: #5865F2; color: white;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
 }
-.btn-discord:hover { background: #4752C4; }
-</style>    
-</head>    
-<body>    
+.btn-discord:hover { background: #4752C4; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(88,101,242,.35); }
 
-<div class="login-container">    
-    <div class="logo">    
-        <img src="https://i.postimg.cc/gky5YNH2/1778823817951-3.jpg" id="loginLogo">    
-        <h1>Sala sem Futuro OS</h1>    
-    </div>    
-    <div class="login-box glass">    
-        <div class="input-group">    
-            <label>Registro Acadêmico (RA)</label>    
-            <input type="text" id="raInput" placeholder="Digite seu RA para vincular" oninput="limparErro()">    
-            <div class="error-msg" id="raError">⚠️ O preenchimento do campo RA é obrigatório.</div>
-        </div>    
-        <div class="input-group">    
-            <label>Senha</label>    
-            <div class="password-wrapper">    
-                <input type="password" id="senhaInput" placeholder="Digite sua senha (opcional)">    
-                <button class="eye-btn" onclick="toggleSenha()">👁️</button>    
-            </div>    
-        </div>    
-        <button class="btn btn-primary" onclick="realizarLoginManual()">Iniciar</button>    
-        
-        <button class="btn btn-discord" onclick="loginComDiscord()">    
-            <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a74.37,74.37,0,0,0,6.66-10.85,68.43,68.43,0,0,1-10.5-5c.88-.65,1.72-1.33,2.53-2A75.52,75.52,0,0,0,96.53,78.5c.81.71,1.65,1.38,2.53,2a68.42,68.42,0,0,1-10.5,5,74.37,74.37,0,0,0,6.66,10.85,105.73,105.73,0,0,0,31.06-18.83C129.9,48.55,123.86,25.79,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,82.69,40.36,94.07,46,94.07,53,89,65.69,82.69,65.69Z"/></svg>    
-            Entrar com o Discord    
-        </button>    
-    </div>    
-</div>    
-
-<script>    
-const CLIENT_ID = 'SEU_CLIENT_ID_AQUI';    
-const REDIRECT_URI = window.location.href.split('#')[0].split('?')[0];    
-
-function toggleSenha(){    
-    const input = document.getElementById('senhaInput');    
-    input.type = input.type === 'password' ? 'text' : 'password';    
-}    
-
-function realizarLoginManual(){    
-    const raInput = document.getElementById('raInput');
-    const raVal = raInput.value.trim();    
-    const errorMsg = document.getElementById('raError');
-
-    if(raVal === "") {
-        raInput.classList.add('invalid');
-        errorMsg.style.display = 'block';
-        raInput.focus();
-        return; 
-    }
-
-    // Salvar RA no localStorage para usar em todas as páginas
-    localStorage.setItem('sala_sem_futuro_ra', raVal);
-    localStorage.setItem('sala_sem_futuro_logged', 'true');
-    
-    // Redirecionar para dashboard
-    window.location.href = 'dashboard.html';
-}    
-
-function limparErro() {
-    const raInput = document.getElementById('raInput');
-    const errorMsg = document.getElementById('raError');
-    if(raInput.value.trim() !== "") {
-        raInput.classList.remove('invalid');
-        errorMsg.style.display = 'none';
-    }
+.notice {
+  margin-top: 24px; padding: 14px;
+  background: rgba(212,175,55,.04);
+  border: 1px solid rgba(212,175,55,.08);
+  border-radius: 12px;
+  font-family: 'Space Mono', monospace; font-size: .65rem;
+  color: var(--muted); text-align: center; line-height: 1.6;
 }
-    
-function loginComDiscord() {    
-    const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;    
-    window.location.href = url;    
-}    
-</script>    
-</body>    
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="wrap">
+  <a href="index.html" class="back-link">← Voltar ao início</a>
+  <div class="header">
+    <div class="logo-row">
+      <img src="https://i.postimg.cc/gky5YNH2/1778823817951-3.jpg" class="logo-img" alt="Logo">
+      <div class="logo-text">Sala sem <span>Futuro OS</span></div>
+    </div>
+    <p class="tagline">// Acesso à plataforma unificada</p>
+  </div>
+  <div class="card">
+    <div class="card-title">🔐 Identificação</div>
+
+    <div class="field">
+      <label>Registro Acadêmico (RA)</label>
+      <input type="text" id="raInput" placeholder="Digite seu RA" oninput="limparErro('ra')">
+      <div class="err-msg" id="raError">⚠️ O RA é obrigatório.</div>
+    </div>
+
+    <div class="field">
+      <label>Senha <span style="color:#2a2a3a; font-size:.6rem;">(opcional)</span></label>
+      <div class="pw-wrap">
+        <input type="password" id="senhaInput" placeholder="Digite sua senha" oninput="limparErro('senha')">
+        <button class="eye-btn" onclick="toggleSenha()" type="button">👁️</button>
+      </div>
+      <div class="err-msg" id="senhaError"></div>
+    </div>
+
+    <button class="btn btn-gold" onclick="realizarLogin()">Entrar no Sistema</button>
+
+    <div class="divider">ou</div>
+
+    <button class="btn btn-discord" onclick="loginComDiscord()">
+      <svg width="20" height="15" viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a74.37,74.37,0,0,0,6.66-10.85,68.43,68.43,0,0,1-10.5-5c.88-.65,1.72-1.33,2.53-2A75.52,75.52,0,0,0,96.53,78.5c.81.71,1.65,1.38,2.53,2a68.42,68.42,0,0,1-10.5,5,74.37,74.37,0,0,0,6.66,10.85,105.73,105.73,0,0,0,31.06-18.83C129.9,48.55,123.86,25.79,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,82.69,40.36,94.07,46,94.07,53,89,65.69,82.69,65.69Z"/></svg>
+      Entrar com Discord
+    </button>
+
+    <div class="notice">
+      🔒 Seus dados ficam armazenados localmente.<br>
+      Não compartilhe suas credenciais.
+    </div>
+  </div>
+</div>
+<script>
+const CLIENT_ID = 'SEU_CLIENT_ID_AQUI';
+const REDIRECT_URI = window.location.href.split('#')[0].split('?')[0];
+
+// Redirecionar se já logado
+if (localStorage.getItem('sala_sem_futuro_logged') === 'true' && localStorage.getItem('sala_sem_futuro_ra')) {
+  window.location.href = 'dashboard.html';
+}
+
+function toggleSenha() {
+  const input = document.getElementById('senhaInput');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+function limparErro(campo) {
+  if (campo === 'ra') {
+    const el = document.getElementById('raInput');
+    el.classList.remove('invalid');
+    document.getElementById('raError').classList.remove('show');
+  }
+}
+
+function realizarLogin() {
+  const ra = document.getElementById('raInput').value.trim();
+  if (!ra) {
+    document.getElementById('raInput').classList.add('invalid');
+    document.getElementById('raError').classList.add('show');
+    document.getElementById('raInput').focus();
+    return;
+  }
+  localStorage.setItem('sala_sem_futuro_ra', ra);
+  localStorage.setItem('sala_sem_futuro_logged', 'true');
+  localStorage.setItem('sala_sem_futuro_login_time', new Date().toISOString());
+  window.location.href = 'dashboard.html';
+}
+
+function loginComDiscord() {
+  const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+  window.location.href = url;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') realizarLogin();
+});
+</script>
+</body>
 </html>
