@@ -304,6 +304,7 @@ body::after {
         <button class="tab-btn" onclick="mudarTab('alunos')">🎓 Tarefas dos Alunos</button>
     </div>
 
+    <!-- TAB EQUIPE -->
     <div id="tabEquipe" class="tab-content active">
         <div class="admin-grid">
             <div class="panel-box"><h3>👑 Staff Especializada</h3><div class="team-list" id="listaEquipe"></div></div>
@@ -320,6 +321,7 @@ body::after {
         </div>
     </div>
 
+    <!-- TAB TAREFAS DA EQUIPE -->
     <div id="tabTarefas" class="tab-content">
         <div class="admin-grid">
             <div class="panel-box">
@@ -336,6 +338,7 @@ body::after {
         </div>
     </div>
 
+    <!-- TAB TAREFAS DOS ALUNOS -->
     <div id="tabAlunos" class="tab-content">
         <div class="admin-grid">
             <div class="panel-box"><h3>📥 Solicitações dos Alunos</h3><div class="tarefas-alunos-list" id="tarefasAlunosList"></div></div>
@@ -377,7 +380,7 @@ function carregarDados() {
 function gerarSenhaTemporaria() { const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'; let s = ''; for (let i = 0; i < 8; i++) s += chars.charAt(Math.floor(Math.random() * chars.length)); return s; }
 function fecharModalCred() { document.getElementById('credModal').style.display = 'none'; }
 function fecharModalRelatorio() { document.getElementById('relatorioModal').style.display = 'none'; }
-</script>
+
 function adicionarMembro(e) {
     e.preventDefault();
     const nome = document.getElementById('nomeMembro').value;
@@ -437,6 +440,7 @@ function atualizarSelectResponsaveis() {
         }
     });
 }
+
 function criarTarefa(e) {
     e.preventDefault();
     const titulo = document.getElementById('tituloTarefa').value;
@@ -454,17 +458,7 @@ function criarTarefa(e) {
 }
 
 function verRelatorio(tarefaId) {
-    const tarefa = tarefas.find(t => t.id === tarefaId);
-    if (!tarefa || !tarefa.relatorio) { alert('Nenhum relatório disponível.'); return; }
-    let statusTexto = '';
-    if (tarefa.relatorio.status === 'feito') statusTexto = '✅ Feito';
-    else if (tarefa.relatorio.status === 'nao_feito') statusTexto = '❌ Não Feito';
-    else if (tarefa.relatorio.status === 'inconclusivo') statusTexto = '⚠️ Inconclusivo';
-    else if (tarefa.relatorio.status === 'ajuda') statusTexto = '🆘 Precisa de Ajuda';
-    document.getElementById('relatorioContent').innerHTML = `<div style="text-align:left;"><p><strong>📌 Tarefa:</strong> ${tarefa.titulo}</p><p><strong>👤 Entregue por:</strong> ${tarefa.relatorio.entreguePor}</p><p><strong>📊 Status:</strong> ${statusTexto}</p><p><strong>📝 Relatório:</strong></p><div style="background:rgba(0,0,0,.3); padding:12px; border-radius:12px; margin:10px 0;">${tarefa.relatorio.descricao}</div><p><strong>📅 Entregue em:</strong> ${new Date(tarefa.relatorio.entregueEm).toLocaleString()}</p></div>`;
-    document.getElementById('relatorioModal').style.display = 'flex';
-}
-
+    const tarefa = tarefas.find(t => 
 function renderizarTarefas() {
     const quadro = document.getElementById('quadroTarefas');
     quadro.innerHTML = '';
@@ -505,6 +499,7 @@ function rejeitarTarefa(id) {
         if (index !== -1) { tarefas[index].status = 'pendente'; localStorage.setItem('sala_sem_futuro_tarefas', JSON.stringify(tarefas)); renderizarTarefas(); alert('❌ Rejeitada!'); }
     } else if (senha !== null) alert("Senha inválida!");
 }
+
 function renderizarTarefasAlunos() {
     const lista = document.getElementById('tarefasAlunosList');
     lista.innerHTML = '';
@@ -543,7 +538,6 @@ function confirmarDistribuicao(tarefaId) {
     renderizarTarefasAlunos(); renderizarTarefas(); atualizarResumoEquipe(); cancelarDistribuicao();
     alert(`✅ Tarefa distribuída para ${membro.nome}!`);
 }
-
 function atualizarNotificacoes() {
     const notificacoes = JSON.parse(localStorage.getItem('sala_sem_futuro_notificacao') || 'null');
     document.getElementById('notifCount').innerText = notificacoes ? 1 : 0;
