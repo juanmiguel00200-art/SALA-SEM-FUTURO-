@@ -17,6 +17,7 @@
     --red: #e74c3c;
     --orange: #ff9f43;
     --green: #00ff88;
+    --blue: #3498db;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
@@ -46,7 +47,7 @@ body::after {
     z-index: -1;
 }
 
-.container { max-width: 600px; margin: 0 auto; }
+.container { max-width: 700px; margin: 0 auto; }
 
 .login-container { max-width: 400px; margin: 80px auto 0; }
 .login-box {
@@ -110,6 +111,7 @@ body::after {
     border-radius: 24px;
     padding: 24px;
     box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+    margin-bottom: 20px;
 }
 .panel-box h3 {
     font-size: 1.1rem;
@@ -132,6 +134,8 @@ body::after {
 .task-card.high { border-left-color: var(--red); }
 .task-card.review { border-left-color: var(--orange); background: rgba(255,159,67,0.02); }
 .task-card.done { border-left-color: #333; opacity: 0.4; }
+.task-card.inconclusivo { border-left-color: #ff9f43; background: rgba(255,159,67,0.05); }
+.task-card.ajuda { border-left-color: #3498db; background: rgba(52,152,219,0.05); }
 
 .task-header { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
 .task-title { font-weight: 700; font-size: 1rem; margin-bottom: 6px; }
@@ -178,11 +182,11 @@ body::after {
     border: 1px solid var(--border);
     border-radius: 24px;
     padding: 28px;
-    max-width: 400px;
+    max-width: 500px;
     width: 100%;
     text-align: center;
 }
-.modal-box input {
+.modal-box input, .modal-box textarea, .modal-box select {
     width: 100%;
     padding: 14px;
     margin: 10px 0;
@@ -190,6 +194,40 @@ body::after {
     border: 1px solid var(--border);
     background: rgba(0,0,0,.5);
     color: white;
+    outline: none;
+}
+.modal-box textarea { resize: vertical; min-height: 100px; }
+.modal-box select option { background: #111; }
+
+.relatorio-status {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+.status-option {
+    flex: 1;
+    padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 700;
+    border: 1px solid var(--border);
+}
+.status-option:hover { filter: brightness(1.05); }
+.status-option.selected { border-color: var(--primary); background: rgba(212,175,55,0.1); }
+.status-feito { background: rgba(0,255,136,0.1); color: #00ff88; }
+.status-nao-feito { background: rgba(231,76,60,0.1); color: #e74c3c; }
+.status-inconclusivo { background: rgba(255,159,67,0.1); color: #ff9f43; }
+.status-ajuda { background: rgba(52,152,219,0.1); color: #3498db; }
+
+.erro-item {
+    background: rgba(0,0,0,0.3);
+    padding: 12px;
+    border-radius: 12px;
+    margin: 10px 0;
+    text-align: left;
+    border-left: 3px solid var(--primary);
 }
 </style>
 </head>
@@ -208,9 +246,10 @@ body::after {
 <div id="modalTrocaSenha" class="modal">
     <div class="modal-box">
         <h3 style="color: var(--primary);">🔒 Trocar Senha</h3>
-        <p style="color: #8e8ea0; margin-bottom: 15px;">Esta é sua primeira vez acessando. Crie uma nova senha:</p>
+        <p style="color: #8e8ea0; margin-bottom: 15px;">⚠️ Regras: mínimo 8 caracteres, 1 letra maiúscula, 1 minúscula, 1 número e 1 caractere especial (!@#$%&*)</p>
         <input type="password" id="novaSenha" placeholder="Nova senha">
         <input type="password" id="confirmarSenha" placeholder="Confirmar senha">
+        <div id="senhaErro" style="color: #e74c3c; font-size: 0.7rem; margin-top: 5px; display: none;"></div>
         <button class="btn-login" onclick="trocarSenha()">Salvar nova senha</button>
     </div>
 </div>
@@ -224,40 +263,101 @@ body::after {
             <a href="dashboard.html" class="btn-back" style="margin-left: 8px;">← Dashboard</a>
         </div>
     </header>
+
     <div class="panel-box">
         <h3>📥 Minhas Tarefas</h3>
         <div class="task-board" id="quadroOperador"><div style="text-align:center; color:#8e8ea0;">Carregando tarefas...</div></div>
     </div>
-    <div class="panel-box" style="margin-top: 20px;">
+
+    <div class="panel-box">
+        <h3>🔍 Acessar Dashboard do Aluno</h3>
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="buscarAlunoRA" placeholder="Digite o RA do aluno" style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,.5); color: white;">
+            <button class="btn-back" onclick="acessarDashboardAluno()" style="margin:0;">🔍 Buscar</button>
+        </div>
+        <div id="dashboardAlunoContainer" style="margin-top: 20px; display: none;">
+            <div style="background: rgba(0,0,0,.3); border-radius: 16px; padding: 15px;">
+                <h4 style="color: var(--primary);">📊 Dashboard do Aluno</h4>
+                <div id="alunoInfo"></div>
+                <div id="alunoErros"></div>
+                <div id="alunoProgresso"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-box">
         <h3>ℹ️ Minhas Informações</h3>
         <div id="infoUsuario" style="color: #8e8ea0; font-size: 0.85rem;"></div>
+    </div>
+</div>
+
+<div id="modalRelatorio" class="modal">
+    <div class="modal-box">
+        <h3 style="color: var(--primary);">📋 Entregar Relatório</h3>
+        <p id="relatorioTarefaId" style="display: none;"></p>
+        <div class="relatorio-status">
+            <div class="status-option status-feito" onclick="selecionarStatus(this, 'feito')">✅ Feito</div>
+            <div class="status-option status-nao-feito" onclick="selecionarStatus(this, 'nao_feito')">❌ Não Feito</div>
+            <div class="status-option status-inconclusivo" onclick="selecionarStatus(this, 'inconclusivo')">⚠️ Inconclusivo</div>
+            <div class="status-option status-ajuda" onclick="selecionarStatus(this, 'ajuda')">🆘 Precisa de Ajuda</div>
+        </div>
+        <input type="hidden" id="statusSelecionado" value="">
+        <textarea id="relatorioDescricao" placeholder="📝 Descreva detalhadamente o que foi feito, os problemas encontrados ou o que precisa de ajuda... (obrigatório)" rows="4"></textarea>
+        <div id="relatorioErro" style="color: #e74c3c; font-size: 0.7rem; display: none;">⚠️ Selecione um status e preencha a descrição!</div>
+        <button class="btn-login" onclick="enviarRelatorio()" style="margin-top: 10px;">📤 Entregar Relatório</button>
+        <button class="btn-back" onclick="fecharModalRelatorio()" style="margin-top: 10px;">Cancelar</button>
     </div>
 </div>
 
 <script>
 let usuarioLogado = null;
 let equipe = [];
+let tarefaAtualParaRelatorio = null;
+let relatorioStatusSelecionado = null;
 
-function carregarEquipe() { equipe = JSON.parse(localStorage.getItem('sala_sem_futuro_equipe') || '[]'); }
+function validarSenha(senha) {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&*])[A-Za-z\d!@#$%&*]{8,}$/;
+    return regex.test(senha);
+}
+
+function carregarDados() {
+    equipe = JSON.parse(localStorage.getItem('sala_sem_futuro_equipe') || '[]');
+}
 
 function fazerLogin() {
     const chave = document.getElementById('loginChave').value.trim();
     const senha = document.getElementById('loginSenha').value;
-    carregarEquipe();
+    carregarDados();
     const usuario = equipe.find(m => m.chave === chave);
     if (!usuario) { alert('Chave não encontrada!'); return; }
     if (usuario.senha !== senha) { alert('Senha incorreta!'); return; }
     usuarioLogado = usuario;
     localStorage.setItem('sala_sem_futuro_equipe_logged', JSON.stringify({ chave: usuario.chave, nome: usuario.nome }));
-    if (usuario.senhaTemporaria) { document.getElementById('modalTrocaSenha').style.display = 'flex'; }
-    else { entrarNoPainel(); }
+    if (usuario.senhaTemporaria) { 
+        document.getElementById('modalTrocaSenha').style.display = 'flex';
+    } else { 
+        entrarNoPainel(); 
+    }
 }
 
 function trocarSenha() {
     const novaSenha = document.getElementById('novaSenha').value;
     const confirmar = document.getElementById('confirmarSenha').value;
-    if (novaSenha.length < 4) { alert('A senha deve ter no mínimo 4 caracteres!'); return; }
-    if (novaSenha !== confirmar) { alert('As senhas não coincidem!'); return; }
+    const erroDiv = document.getElementById('senhaErro');
+    
+    if (!validarSenha(novaSenha)) {
+        erroDiv.style.display = 'block';
+        erroDiv.innerHTML = '❌ Senha fraca! Use: 8+ caracteres, 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial (!@#$%&*)';
+        return;
+    }
+    erroDiv.style.display = 'none';
+    
+    if (novaSenha !== confirmar) {
+        erroDiv.style.display = 'block';
+        erroDiv.innerHTML = '❌ As senhas não coincidem!';
+        return;
+    }
+    
     const index = equipe.findIndex(m => m.chave === usuarioLogado.chave);
     if (index !== -1) {
         equipe[index].senha = novaSenha;
@@ -288,59 +388,162 @@ function carregarTarefasDoOperador() {
     if (!usuarioLogado) return;
     const quadro = document.getElementById('quadroOperador');
     const tarefas = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
-    const minhasTarefas = tarefas.filter(t => t.responsavel === usuarioLogado.chave);
+    const minhasTarefas = tarefas.filter(t => t.responsavel === usuarioLogado.chave && t.status !== 'concluida' && t.status !== 'entregue');
+    
     if (minhasTarefas.length === 0) {
         quadro.innerHTML = '<p style="color: var(--muted); text-align: center;">Nenhuma tarefa atribuída.</p>';
         return;
     }
+    
     quadro.innerHTML = '';
     minhasTarefas.forEach(tarefa => {
         const card = document.createElement('div');
-        card.className = tarefa.prioridade === 'high' ? 'task-card high' : 'task-card';
-        if (tarefa.status === 'aguardando_revisao') card.classList.add('review');
-        if (tarefa.status === 'concluida') card.classList.add('done');
-        let statusText = '🔵 EM FILA', statusColor = '#61b5ff';
+        let classe = 'task-card';
+        if (tarefa.prioridade === 'high') classe += ' high';
+        if (tarefa.status === 'aguardando_revisao') classe += ' review';
+        if (tarefa.status === 'inconclusivo') classe += ' inconclusivo';
+        if (tarefa.status === 'ajuda') classe += ' ajuda';
+        card.className = classe;
+        
+        let statusText = '🔵 EM FILA';
+        let statusColor = '#61b5ff';
         if (tarefa.status === 'em_progresso') { statusText = '⚡ EM PROGRESSO'; statusColor = '#ffcc00'; }
         if (tarefa.status === 'aguardando_revisao') { statusText = '⏳ AGUARDANDO REVISÃO'; statusColor = '#ff9f43'; }
-        if (tarefa.status === 'concluida') { statusText = '🏆 CONCLUÍDO'; statusColor = '#d4af37'; }
+        if (tarefa.status === 'inconclusivo') { statusText = '⚠️ INCONCLUSIVO'; statusColor = '#ff9f43'; }
+        if (tarefa.status === 'ajuda') { statusText = '🆘 PRECISA DE AJUDA'; statusColor = '#3498db'; }
+        
         card.innerHTML = `
-            <div class="task-header"><span>ID: #${tarefa.id}</span><span>${tarefa.prioridade === 'high' ? '⚠️ CRÍTICO' : '📌 REGULAR'}</span></div>
+            <div class="task-header">
+                <span>ID: #${tarefa.id}</span>
+                <span>${tarefa.prioridade === 'high' ? '⚠️ CRÍTICO' : '📌 REGULAR'}</span>
+            </div>
             <div class="task-title">${tarefa.titulo}</div>
             <div class="task-desc">${tarefa.descricao}</div>
             <div class="task-footer">
                 <span style="font-size:0.7rem;">Criado por: ${tarefa.criador} • ${new Date(tarefa.data_criacao).toLocaleDateString()}</span>
-                <button class="badge-status" style="color: ${statusColor};" onclick="avancarStatus(this, '${tarefa.id}')" ${tarefa.status === 'concluida' ? 'disabled' : ''}>${statusText}</button>
+                <button class="badge-status" style="color: ${statusColor};" onclick="abrirRelatorio(${tarefa.id})">📤 Entregar Relatório</button>
             </div>
         `;
         quadro.appendChild(card);
     });
 }
 
-async function avancarStatus(botao, tarefaId) {
-    const tarefas = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
-    const tarefaIndex = tarefas.findIndex(t => t.id == tarefaId);
-    if (tarefaIndex === -1) return;
-    if (botao.innerText === "🔵 EM FILA") {
-        tarefas[tarefaIndex].status = 'em_progresso';
-        botao.innerText = "⚡ EM PROGRESSO";
-        botao.style.color = "#ffcc00";
-    } else if (botao.innerText === "⚡ EM PROGRESSO") {
-        if (!confirm("Deseja enviar esta tarefa para aprovação do Admin?")) return;
-        tarefas[tarefaIndex].status = 'aguardando_revisao';
-        botao.innerText = "⏳ AGUARDANDO REVISÃO";
-        botao.style.color = "#ff9f43";
-        botao.disabled = true;
-        localStorage.setItem('sala_sem_futuro_notificacao', JSON.stringify({
-            tipo: 'tarefa_aguardando',
-            tarefaId: tarefaId,
-            tarefaTitulo: tarefas[tarefaIndex].titulo,
-            operador: usuarioLogado.nome,
-            timestamp: new Date().toISOString()
-        }));
-        botao.closest('.task-card').classList.add('review');
+function abrirRelatorio(tarefaId) {
+    tarefaAtualParaRelatorio = tarefaId;
+    relatorioStatusSelecionado = null;
+    document.getElementById('statusSelecionado').value = '';
+    document.getElementById('relatorioDescricao').value = '';
+    document.getElementById('relatorioErro').style.display = 'none';
+    document.querySelectorAll('.status-option').forEach(opt => opt.classList.remove('selected'));
+    document.getElementById('modalRelatorio').style.display = 'flex';
+}
+
+function selecionarStatus(elemento, status) {
+    relatorioStatusSelecionado = status;
+    document.getElementById('statusSelecionado').value = status;
+    document.querySelectorAll('.status-option').forEach(opt => opt.classList.remove('selected'));
+    elemento.classList.add('selected');
+}
+
+function fecharModalRelatorio() {
+    document.getElementById('modalRelatorio').style.display = 'none';
+}
+
+function enviarRelatorio() {
+    if (!relatorioStatusSelecionado) {
+        document.getElementById('relatorioErro').style.display = 'block';
+        document.getElementById('relatorioErro').innerHTML = '⚠️ Selecione um status para o relatório!';
+        return;
     }
-    localStorage.setItem('sala_sem_futuro_tarefas', JSON.stringify(tarefas));
+    
+    const descricao = document.getElementById('relatorioDescricao').value.trim();
+    if (!descricao) {
+        document.getElementById('relatorioErro').style.display = 'block';
+        document.getElementById('relatorioErro').innerHTML = '⚠️ A descrição do relatório é obrigatória!';
+        return;
+    }
+    
+    const tarefasList = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
+    const index = tarefasList.findIndex(t => t.id === tarefaAtualParaRelatorio);
+    
+    if (index !== -1) {
+        tarefasList[index].relatorio = {
+            status: relatorioStatusSelecionado,
+            descricao: descricao,
+            entreguePor: usuarioLogado.nome,
+            entregueEm: new Date().toISOString()
+        };
+        
+        if (relatorioStatusSelecionado === 'feito') {
+            tarefasList[index].status = 'aguardando_revisao';
+            localStorage.setItem('sala_sem_futuro_notificacao', JSON.stringify({
+                tipo: 'tarefa_aguardando',
+                tarefaId: tarefaAtualParaRelatorio,
+                tarefaTitulo: tarefasList[index].titulo,
+                operador: usuarioLogado.nome,
+                relatorio: descricao,
+                timestamp: new Date().toISOString()
+            }));
+        } else if (relatorioStatusSelecionado === 'nao_feito') {
+            tarefasList[index].status = 'nao_feito';
+        } else if (relatorioStatusSelecionado === 'inconclusivo') {
+            tarefasList[index].status = 'inconclusivo';
+        } else if (relatorioStatusSelecionado === 'ajuda') {
+            tarefasList[index].status = 'ajuda';
+        }
+        
+        localStorage.setItem('sala_sem_futuro_tarefas', JSON.stringify(tarefasList));
+    }
+    
+    fecharModalRelatorio();
     carregarTarefasDoOperador();
+    alert('✅ Relatório entregue com sucesso!');
+}
+
+function acessarDashboardAluno() {
+    const alunoRA = document.getElementById('buscarAlunoRA').value.trim();
+    if (!alunoRA) { alert('Digite o RA do aluno!'); return; }
+    
+    const alunos = JSON.parse(localStorage.getItem('sala_sem_futuro_alunos_logs') || '[]');
+    const alunoData = alunos.find(a => a.ra === alunoRA) || {
+        ra: alunoRA,
+        ultimoAcesso: new Date().toLocaleString(),
+        erros: [
+            { data: new Date().toLocaleString(), tipo: "Login", mensagem: "Falha na autenticação - token expirado" },
+            { data: new Date().toLocaleString(), tipo: "Módulo", mensagem: "KuroSpeak IA não respondeu" }
+        ],
+        progresso: "45%",
+        ultimaAtividade: "Tentativa de login às " + new Date().toLocaleTimeString()
+    };
+    
+    const container = document.getElementById('dashboardAlunoContainer');
+    document.getElementById('alunoInfo').innerHTML = `
+        <p><strong>🎓 RA do Aluno:</strong> ${alunoData.ra}</p>
+        <p><strong>📅 Último Acesso:</strong> ${alunoData.ultimoAcesso}<p><strong>📊 Progresso Geral:</strong> ${alunoData.progresso}</p>
+        <p><strong>🕐 Última Atividade:</strong> ${alunoData.ultimaAtividade}</p>
+    `;
+    
+    document.getElementById('alunoErros').innerHTML = `<p><strong>⚠️ Erros Registrados:</strong></p>`;
+    (alunoData.erros || []).forEach(erro => {
+        document.getElementById('alunoErros').innerHTML += `
+            <div class="erro-item">
+                <strong>[${erro.tipo}]</strong> ${erro.mensagem}<br>
+                <small style="color:#666;">${erro.data}</small>
+            </div>
+        `;
+    });
+    
+    document.getElementById('alunoProgresso').innerHTML = `
+        <p><strong>📈 Detalhamento do Progresso:</strong></p>
+        <div style="background: #222; border-radius: 10px; height: 8px; margin: 10px 0;">
+            <div style="width: ${alunoData.progresso}; height: 8px; background: linear-gradient(90deg, #d4af37, #f3e5ab); border-radius: 10px;"></div>
+        </div>
+        <p><strong>✅ Lições Concluídas:</strong> 12/27</p>
+        <p><strong>⏳ Em Andamento:</strong> 3</p>
+        <p><strong>🔒 Bloqueadas:</strong> 12</p>
+    `;
+    
+    container.style.display = 'block';
 }
 
 function logout() {
@@ -355,10 +558,11 @@ function logout() {
 const loggedData = localStorage.getItem('sala_sem_futuro_equipe_logged');
 if (loggedData) {
     const data = JSON.parse(loggedData);
-    carregarEquipe();
+    carregarDados();
     usuarioLogado = equipe.find(m => m.chave === data.chave);
     if (usuarioLogado) entrarNoPainel();
 }
 </script>
 </body>
 </html>
+ 
