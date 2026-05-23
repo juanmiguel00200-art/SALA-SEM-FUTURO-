@@ -324,7 +324,6 @@ body::after {
         </div>
     </header>
 
-    <!-- TABS -->
     <div class="tabs">
         <button class="tab-btn active" onclick="mudarTab('equipe')">👥 Equipe</button>
         <button class="tab-btn" onclick="mudarTab('tarefas')">📋 Tarefas da Equipe</button>
@@ -346,6 +345,11 @@ body::after {
                         <input type="text" id="nomeMembro" placeholder="Ex: João Silva" required>
                     </div>
                     <div class="form-group">
+                        <label>Chave de Identificação (ID Único)</label>
+                        <input type="text" id="chaveMembro" placeholder="Ex: @joao, kuro_off, vinicius_dev" required>
+                        <small style="color:#666; font-size:0.65rem;">⚠️ Esta será a credencial de login do membro</small>
+                    </div>
+                    <div class="form-group">
                         <label>Cargo / Função</label>
                         <select id="cargoMembro">
                             <option value="OPERADOR">Operador</option>
@@ -353,18 +357,12 @@ body::after {
                             <option value="SUPORTE">Suporte Técnico</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>RA (Login do usuário)</label>
-                        <input type="text" id="raMembro" placeholder="Digite o RA do membro" required>
-                    </div>
                     <button type="submit" class="btn-submit">Criar Membro e Gerar Credenciais</button>
                 </form>
             </div>
             <div class="panel-box">
                 <h3>📊 Resumo da Equipe</h3>
-                <div id="resumoEquipe">
-                    <p style="color: var(--muted);">Carregando...</p>
-                </div>
+                <div id="resumoEquipe"><p style="color: var(--muted);">Carregando...</p></div>
             </div>
         </div>
     </div>
@@ -384,7 +382,7 @@ body::after {
                         <textarea id="descTarefa" placeholder="Descreva os detalhes operacionais..." required></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Direcionar para quem?</label>
+                        <label>Direcionar para quem? (Chave do membro)</label>
                         <select id="responsavelTarefa"></select>
                     </div>
                     <div class="form-group">
@@ -413,9 +411,7 @@ body::after {
             </div>
             <div class="panel-box">
                 <h3>📤 Distribuir para Equipe</h3>
-                <div id="areaDistribuicao">
-                    <p style="color: var(--muted);">Selecione uma tarefa de aluno para distribuir.</p>
-                </div>
+                <div id="areaDistribuicao"><p style="color: var(--muted);">Selecione uma tarefa de aluno para distribuir.</p></div>
             </div>
         </div>
     </div>
@@ -431,19 +427,16 @@ body::after {
 </div>
 
 <script>
-// ==================== DADOS GLOBAIS ====================
 const SENHA_MESTRE = "admin123";
 let equipe = [];
 let tarefas = [];
 let tarefasAlunos = [];
-let currentUser = "Admin Gold";
 
-// ==================== FUNÇÕES PRINCIPAIS ====================
 function carregarDados() {
     equipe = JSON.parse(localStorage.getItem('sala_sem_futuro_equipe') || '[]');
     if (equipe.length === 0) {
         equipe = [
-            { id: 1, nome: "Admin Gold", ra: "admin", cargo: "OWNER", senha: "admin123", senhaTemporaria: false, dataCriacao: new Date().toISOString() }
+            { id: 1, nome: "Admin Gold", chave: "@admin", cargo: "OWNER", senha: "admin123", senhaTemporaria: false, dataCriacao: new Date().toISOString() }
         ];
         localStorage.setItem('sala_sem_futuro_equipe', JSON.stringify(equipe));
     }
@@ -451,7 +444,7 @@ function carregarDados() {
     tarefas = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas') || '[]');
     if (tarefas.length === 0) {
         tarefas = [
-            { id: 101, titulo: "Configurar sistema de logs", descricao: "Implementar logging de todas as ações dos usuários.", responsavel: "admin", prioridade: "normal", status: "concluida", criador: "Admin", data_criacao: new Date().toISOString() }
+            { id: 101, titulo: "Configurar sistema de logs", descricao: "Implementar logging de todas as ações dos usuários.", responsavel: "@admin", prioridade: "normal", status: "concluida", criador: "Admin", data_criacao: new Date().toISOString() }
         ];
         localStorage.setItem('sala_sem_futuro_tarefas', JSON.stringify(tarefas));
     }
@@ -459,8 +452,8 @@ function carregarDados() {
     tarefasAlunos = JSON.parse(localStorage.getItem('sala_sem_futuro_tarefas_alunos') || '[]');
     if (tarefasAlunos.length === 0) {
         tarefasAlunos = [
-            { id: 1, alunoRA: "1234567", titulo: "Erro ao fazer login", descricao: "Não consigo acessar minha conta após atualização.", status: "pendente", data: new Date().toISOString() },
-            { id: 2, alunoRA: "7654321", titulo: "Módulo não carrega", descricao: "O KuroSpeak IA não abre no meu dashboard.", status: "pendente", data: new Date().toISOString() }
+            { id: 1, aluno: "aluno_123", titulo: "Erro ao fazer login", descricao: "Não consigo acessar minha conta após atualização.", status: "pendente", data: new Date().toISOString() },
+            { id: 2, aluno: "aluno_456", titulo: "Módulo não carrega", descricao: "O KuroSpeak IA não abre no meu dashboard.", status: "pendente", data: new Date().toISOString() }
         ];
         localStorage.setItem('sala_sem_futuro_tarefas_alunos', JSON.stringify(tarefasAlunos));
     }
@@ -476,25 +469,23 @@ function carregarDados() {
 function gerarSenhaTemporaria() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
     let senha = '';
-    for (let i = 0; i < 8; i++) {
-        senha += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+    for (let i = 0; i < 8; i++) senha += chars.charAt(Math.floor(Math.random() * chars.length));
     return senha;
 }
 
-function fecharModalCred() {
-    document.getElementById('credModal').style.display = 'none';
-}
+function fecharModalCred() { document.getElementById('credModal').style.display = 'none'; }
 </script>
 <script>
 function adicionarMembro(e) {
     e.preventDefault();
     const nome = document.getElementById('nomeMembro').value;
     const cargo = document.getElementById('cargoMembro').value;
-    const ra = document.getElementById('raMembro').value;
+    let chave = document.getElementById('chaveMembro').value.trim();
     
-    if (equipe.some(m => m.ra === ra)) {
-        alert('Este RA já está cadastrado na equipe!');
+    if (!chave.startsWith('@')) chave = '@' + chave;
+    
+    if (equipe.some(m => m.chave === chave)) {
+        alert('Esta chave de identificação já está em uso!');
         return;
     }
     
@@ -504,7 +495,7 @@ function adicionarMembro(e) {
     equipe.push({
         id: novoId,
         nome: nome,
-        ra: ra,
+        chave: chave,
         cargo: cargo,
         senha: senhaTemp,
         senhaTemporaria: true,
@@ -515,7 +506,7 @@ function adicionarMembro(e) {
     
     document.getElementById('credDisplay').innerHTML = `
         <p><strong>📌 Credenciais de Acesso</strong></p>
-        <p>🔑 RA: <strong style="color: #d4af37;">${ra}</strong></p>
+        <p>🔑 Chave: <strong style="color: #d4af37;">${chave}</strong></p>
         <p>🔒 Senha Temporária: <strong style="color: #d4af37;">${senhaTemp}</strong></p>
         <hr style="border-color: #333; margin: 10px 0;">
         <p style="font-size: 0.7rem;">⚠️ O membro deverá trocar a senha no primeiro acesso.</p>
@@ -538,7 +529,7 @@ function renderizarEquipe() {
         div.innerHTML = `
             <div class="member-info">
                 <h4><span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${membro.senhaTemporaria ? '#ff9f43' : '#00ff88'}; margin-right:8px;"></span> ${membro.nome}</h4>
-                <p>RA: ${membro.ra} • ${membro.cargo} • ${membro.senhaTemporaria ? '⚠️ Senha temporária' : '✅ Senha definida'}</p>
+                <p>Chave: ${membro.chave} • ${membro.cargo} • ${membro.senhaTemporaria ? '⚠️ Senha temporária' : '✅ Senha definida'}</p>
             </div>
             ${membro.cargo !== 'OWNER' ? `<button class="btn-remove" onclick="removerMembro(${membro.id})">Remover</button>` : '<span style="color:#d4af37;">👑</span>'}
         `;
@@ -578,8 +569,8 @@ function atualizarSelectResponsaveis() {
     equipe.forEach(membro => {
         if (membro.cargo !== 'OWNER') {
             const option = document.createElement('option');
-            option.value = membro.ra;
-            option.innerText = `${membro.nome} (${membro.ra}) - ${membro.cargo}`;
+            option.value = membro.chave;
+            option.innerText = `${membro.nome} (${membro.chave}) - ${membro.cargo}`;
             select.appendChild(option);
         }
     });
@@ -640,7 +631,7 @@ function renderizarTarefas() {
         if (tarefa.status === 'em_progresso') { statusText = '⚡ EM PROGRESSO'; statusColor = '#ffcc00'; }
         if (tarefa.status === 'aguardando_revisao') { statusText = '⏳ AGUARDANDO REVISÃO'; statusColor = '#ff9f43'; }
         
-        const membro = equipe.find(m => m.ra === tarefa.responsavel);
+        const membro = equipe.find(m => m.chave === tarefa.responsavel);
         const nomeResponsavel = membro ? membro.nome : tarefa.responsavel;
         
         card.innerHTML = `
@@ -677,9 +668,7 @@ function aprovarTarefa(id) {
             atualizarResumoEquipe();
             alert('✅ Tarefa aprovada e concluída!');
         }
-    } else if (senha !== null) {
-        alert("Senha inválida!");
-    }
+    } else if (senha !== null) { alert("Senha inválida!"); }
 }
 
 function rejeitarTarefa(id) {
@@ -692,9 +681,7 @@ function rejeitarTarefa(id) {
             renderizarTarefas();
             alert('❌ Tarefa rejeitada. Retornou para pendente.');
         }
-    } else if (senha !== null) {
-        alert("Senha inválida!");
-    }
+    } else if (senha !== null) { alert("Senha inválida!"); }
 }
 </script>
 <script>
@@ -713,7 +700,7 @@ function renderizarTarefasAlunos() {
         div.className = 'aluno-tarefa-card';
         div.innerHTML = `
             <div class="member-info">
-                <h4>🎓 Aluno: ${tarefa.alunoRA}</h4>
+                <h4>🎓 Aluno: ${tarefa.aluno}</h4>
                 <p><strong>${tarefa.titulo}</strong></p>
                 <p style="font-size:0.7rem;">${tarefa.descricao}</p>
                 <p style="font-size:0.65rem; color:#666;">${new Date(tarefa.data).toLocaleString()}</p>
@@ -731,14 +718,14 @@ function abrirDistribuicao(tarefaId) {
     let membrosOptions = '';
     equipe.forEach(membro => {
         if (membro.cargo !== 'OWNER') {
-            membrosOptions += `<option value="${membro.ra}">${membro.nome} (${membro.cargo})</option>`;
+            membrosOptions += `<option value="${membro.chave}">${membro.nome} (${membro.chave}) - ${membro.cargo}</option>`;
         }
     });
     
     document.getElementById('areaDistribuicao').innerHTML = `
         <div style="background:rgba(0,0,0,.3); border-radius:16px; padding:20px;">
             <h4 style="color: var(--primary);">Distribuir Tarefa</h4>
-            <p><strong>Aluno:</strong> ${tarefa.alunoRA}</p>
+            <p><strong>Aluno:</strong> ${tarefa.aluno}</p>
             <p><strong>Título:</strong> ${tarefa.titulo}</p>
             <p><strong>Descrição:</strong> ${tarefa.descricao}</p>
             <div class="form-group">
@@ -757,7 +744,7 @@ function cancelarDistribuicao() {
 
 function confirmarDistribuicao(tarefaId) {
     const responsavel = document.getElementById('selectMembroDistribuir').value;
-    const membro = equipe.find(m => m.ra === responsavel);
+    const membro = equipe.find(m => m.chave === responsavel);
     const tarefaAluno = tarefasAlunos.find(t => t.id === tarefaId);
     
     if (!tarefaAluno) return;
@@ -765,7 +752,7 @@ function confirmarDistribuicao(tarefaId) {
     const novaTarefaEquipe = {
         id: Date.now(),
         titulo: `[ALUNO] ${tarefaAluno.titulo}`,
-        descricao: `${tarefaAluno.descricao}\n\n👤 Aluno responsável: ${tarefaAluno.alunoRA}`,
+        descricao: `${tarefaAluno.descricao}\n\n👤 Aluno responsável: ${tarefaAluno.aluno}`,
         responsavel: responsavel,
         prioridade: 'normal',
         status: 'pendente',
@@ -791,8 +778,7 @@ function confirmarDistribuicao(tarefaId) {
 
 function atualizarNotificacoes() {
     const notificacoes = JSON.parse(localStorage.getItem('sala_sem_futuro_notificacao') || 'null');
-    const count = notificacoes ? 1 : 0;
-    document.getElementById('notifCount').innerText = count;
+    document.getElementById('notifCount').innerText = notificacoes ? 1 : 0;
 }
 
 function verNotificacoes() {
@@ -810,7 +796,6 @@ function verNotificacoes() {
 function mudarTab(tab) {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    
     if (tab === 'equipe') {
         document.getElementById('tabEquipe').classList.add('active');
         document.querySelector('.tabs button:first-child').classList.add('active');
@@ -823,12 +808,8 @@ function mudarTab(tab) {
     }
 }
 
-// Inicialização
 carregarDados();
-setInterval(() => {
-    carregarDados();
-    atualizarNotificacoes();
-}, 5000);
+setInterval(() => { carregarDados(); atualizarNotificacoes(); }, 5000);
 </script>
 </body>
 </html>
