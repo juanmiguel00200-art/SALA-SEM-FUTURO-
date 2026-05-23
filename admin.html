@@ -438,6 +438,7 @@ function atualizarSelectResponsaveis() {
     });
 }
 </script>
+<script>
 function criarTarefa(e) {
     e.preventDefault();
     const titulo = document.getElementById('tituloTarefa').value;
@@ -506,6 +507,8 @@ function rejeitarTarefa(id) {
         if (index !== -1) { tarefas[index].status = 'pendente'; localStorage.setItem('sala_sem_futuro_tarefas', JSON.stringify(tarefas)); renderizarTarefas(); alert('❌ Rejeitada!'); }
     } else if (senha !== null) alert("Senha inválida!");
 }
+</script>
+<script>
 function renderizarTarefasAlunos() {
     const lista = document.getElementById('tarefasAlunosList');
     lista.innerHTML = '';
